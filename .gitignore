@@ -38,4 +38,4 @@ build/
 .DS_Store
 
 ### Personal Information ###
-src/main/resources/info/*.csv
+src/main/resources/info/*.db

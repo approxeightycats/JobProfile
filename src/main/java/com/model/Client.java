@@ -1,5 +1,7 @@
 package com.model;
 
+import com.db.DBInterface;
+
 /**
  * contains a client's info
  */
@@ -12,9 +14,11 @@ public class Client {
     private String phone;
     private String address;
 
-    public Client(String clientID) {
-        this.clientID = DBInterface.getOpenClientID();
+    public Client() {
+        clientID = DBInterface.getOpenClientID();
     }
+
+
 
     public String getClientID() {
         return clientID;

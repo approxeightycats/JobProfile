@@ -4,21 +4,47 @@ import java.time.LocalDate;
 
 public class Equipment {
 
+    private String department;
     private String name;
-    private LocalDate dateOfService;
     private Float replacementCost;
-    private Float rentalRate;
+    private LocalDate dateOfService;
 
-    public Equipment(String name) {
+    public Equipment(String dept, String name, Float replacementCost, LocalDate dateOfService) {
+        department = dept;
+        this.name = name;
+        this.replacementCost = replacementCost;
+        this.dateOfService = dateOfService;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 
-    public void setPurchaseDate(LocalDate date) {
-        dateOfService = date;
+    public int getReplacementCost() {
+        return Math.round(replacementCost * 100);
     }
 
-    public void setRentalRate(Float rate) {
-        rentalRate = rate;
+    public void setReplacementCost(Float replacementCost) {
+        this.replacementCost = replacementCost;
     }
 
+    public String getDateOfService() {
+        return dateOfService.toString();
+    }
+
+    public void setDateOfService(LocalDate dateOfService) {
+        this.dateOfService = dateOfService;
+    }
 }

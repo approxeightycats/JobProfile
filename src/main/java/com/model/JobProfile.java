@@ -9,17 +9,15 @@ import java.util.List;
  */
 public class JobProfile {
 
-    private Job job;
-    private Client client;
+    private final Job job;
+    private final Client client;
     private List<Equipment> equipment;
-    private Float price;
     private LocalDate date;
 
     public JobProfile(Job job, Client client) {
         this.job = job;
         this.client = client;
         this.equipment = new ArrayList<>();
-        this.price = 0.00f;
     }
 
     public void schedule(LocalDate date) {
@@ -27,7 +25,11 @@ public class JobProfile {
     }
 
     public Job getJob() {
-        return this.job;
+        return job;
+    }
+
+    public Client getClient() {
+        return client;
     }
 
 

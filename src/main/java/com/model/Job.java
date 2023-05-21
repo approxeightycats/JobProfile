@@ -1,116 +1,75 @@
 package com.model;
 
+import com.db.DBInterface;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Contains technical data for a given job.
  */
 public class Job {
 
     private final int jobID;
-    private String deliveryDestination;
-    private String outputFormat;
-    private String aspectRatio;
-    private String frequency;
-    private String resolution;
-    private float fps;
-    private String location;
-    private int cameras;
-    private boolean live;
-    private String sound;
-    private int length;
+    private final String clientID;
+    private String name;
+    private int estProjectLength;
+    private int estCost;
+    private int estProductionTime;
+    private String status;
 
-    public Job() {
+    public Job(String clientID) {
         jobID = DBInterface.getOpenJobID();
+        this.clientID = clientID;
     }
 
     public int getJobID() {
         return jobID;
     }
 
-    public String getDeliveryDestination() {
-        return deliveryDestination;
+    public String getClientID() {
+        return clientID;
     }
 
-    public void setDeliveryDestination(String deliveryDestination) {
-        this.deliveryDestination = deliveryDestination;
+    public String getName() {
+        return name;
     }
 
-    public String getOutputFormat() {
-        return outputFormat;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setOutputFormat(String outputFormat) {
-        this.outputFormat = outputFormat;
+    public int getEstProjectLength() {
+        return estProjectLength;
     }
 
-    public String getAspectRatio() {
-        return aspectRatio;
+    public void setEstProjectLength(int estProjectLength) {
+        this.estProjectLength = estProjectLength;
     }
 
-    public void setAspectRatio(String aspectRatio) {
-        this.aspectRatio = aspectRatio;
+    public int getEstCost() {
+        return estCost;
     }
 
-    public String getFrequency() {
-        return frequency;
+    public void setEstCost(int estCost) {
+        this.estCost = estCost;
     }
 
-    public void setFrequency(String frequency) {
-        this.frequency = frequency;
+    public int getEstProductionTime() {
+        return estProductionTime;
     }
 
-    public String getResolution() {
-        return resolution;
+    public void setEstProductionTime(int estProductionTime) {
+        this.estProductionTime = estProductionTime;
     }
 
-    public void setResolution(String resolution) {
-        this.resolution = resolution;
+    public String getStatus() {
+        return status;
     }
 
-    public float getFps() {
-        return fps;
+    public void setStatus(String status ) {
+        this.status = status;
     }
 
-    public void setFps(float fps) {
-        this.fps = fps;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public int getCameras() {
-        return cameras;
-    }
-
-    public void setCameras(int cameras) {
-        this.cameras = cameras;
-    }
-
-    public boolean isLive() {
-        return live;
-    }
-
-    public void setLive(boolean live) {
-        this.live = live;
-    }
-
-    public String getSound() {
-        return sound;
-    }
-
-    public void setSound(String sound) {
-        this.sound = sound;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
 }
