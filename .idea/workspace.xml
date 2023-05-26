@@ -5,18 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="caad267f-6d90-4920-8e98-c4b2e244422b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/com/view/main-view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/DBInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/db/DBInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Equipment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Equipment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Job.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Job.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/JobProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/JobProfile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Camera.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/view/JobProfileApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/view/JobProfileApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/view/JobProfileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/view/JobProfileController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/view/hello-view.fxml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,7 +141,11 @@
       <workItem from="1684416157522" duration="1288000" />
       <workItem from="1684478828873" duration="16567000" />
       <workItem from="1684662222810" duration="1002000" />
-      <workItem from="1684672418658" duration="981000" />
+      <workItem from="1684672418658" duration="4716000" />
+      <workItem from="1684825206036" duration="17074000" />
+      <workItem from="1684922070662" duration="2980000" />
+      <workItem from="1684997171967" duration="883000" />
+      <workItem from="1685024677623" duration="1297000" />
     </task>
     <servers />
   </component>
