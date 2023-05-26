@@ -13,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -27,7 +28,10 @@ public class JobProfileApplication extends Application {
 
     private VBox mainVBox;
     private VBox createInvoiceVBox;
-    private VBox newEventVBox;
+    private BorderPane newEventBorderPane;
+    private BorderPane videoBP;
+    private BorderPane photoBP;
+    private BorderPane audioBP;
     private VBox exportCalVBox;
     private VBox viewEventsVBox;
     private VBox adminVBox;
@@ -38,6 +42,9 @@ public class JobProfileApplication extends Application {
     private Button exportCal;
     private Button viewEvents;
     private Button admin;
+    private TextField eventName;
+    private DatePicker startDate;
+    private TextField startTime;
     private Scene mainPage;
     private ScreenController screenController;
     private DBInterface dbInterface;
@@ -50,12 +57,13 @@ public class JobProfileApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        dbInterface = new DBInterface();
         mainVBox = new VBox();
-        mainVBox.setPadding(new Insets(25,25,25,25));
+        mainVBox.setPadding(new Insets(25, 25, 25, 25));
         mainVBox.setSpacing(10);
         initMainScene();
         initScreenController();
-        stage.setMinWidth(200);
+        stage.setMinWidth(825);
         stage.setMinHeight(450);
         stage.setScene(mainPage);
         stage.setOnCloseRequest(e -> {
@@ -63,8 +71,8 @@ public class JobProfileApplication extends Application {
                 equipmentStage.close();
             }
         });
-        stage.setWidth(720);
-        stage.setHeight(720);
+        stage.setWidth(825);
+        stage.setHeight(450);
         stage.centerOnScreen();
         stage.show();
     }
@@ -90,6 +98,9 @@ public class JobProfileApplication extends Application {
         initEventScene();
         initCalExportScene();
         initEventViewScene();
+        initVideoEventOptions();
+        initPhotoEventOptions();
+        initAudioEventOptions();
         initAdminScene();
     }
 
@@ -97,22 +108,16 @@ public class JobProfileApplication extends Application {
         createInvoiceVBox = new VBox();
 
         Button back = new Button("Back");
-        back.setOnAction(e -> {
-            screenController.activate("main");
-        });
+        back.setOnAction(e -> screenController.activate("main"));
 
         createInvoiceVBox.getChildren().addAll(back);
     }
 
     private void initEventScene() {
-        newEventVBox = new VBox();
-        HBox dividerHBox = new HBox();
+        newEventBorderPane = new BorderPane();
         VBox optionsVBox = new VBox();
 
-        newEventVBox.setPadding(new Insets(25, 25, 25, 25));
-        newEventVBox.setSpacing(10);
-        dividerHBox.setPadding(new Insets(25, 25, 25, 25));
-        dividerHBox.setSpacing(10);
+        newEventBorderPane.setPadding(new Insets(25, 25, 25, 25));
         optionsVBox.setPadding(new Insets(25, 25, 25, 25));
         optionsVBox.setSpacing(10);
 
@@ -121,62 +126,35 @@ public class JobProfileApplication extends Application {
         ListView<String> equipmentList = new ListView<>(currentJobEquipment);
 
         VBox textInput = new VBox();
-        VBox buttons = new VBox();
-        VBox equipmentListBox = new VBox();
+        HBox buttons = bottom();
+        VBox equipmentListBox = equipmentView();
+        VBox sidebar = eventTypeSelector();
 
         Label title = new Label("Add event");
-        TextField eventName = new TextField();
+        eventName = new TextField();
         eventName.setPromptText("Enter the name of the event.");
-        DatePicker startDate = new DatePicker(LocalDate.now());
-        TextField startTime = new TextField();
+        startDate = new DatePicker(LocalDate.now());
+        startTime = new TextField();
         startTime.setPromptText("Enter a time range.");
 
         textInput.setAlignment(Pos.CENTER);
-        buttons.setAlignment(Pos.CENTER);
-        equipmentListBox.setAlignment(Pos.CENTER);
         textInput.setPrefWidth(200);
         textInput.setSpacing(10);
-        buttons.setPrefWidth(150);
-        buttons.setSpacing(10);
-        equipmentListBox.setSpacing(10);
 
-        Button save = new Button("Save and add event");
-        Button addEquipment = new Button("Add equipment");
-        Button back = new Button("Back");
-        save.setMinWidth(buttons.getPrefWidth());
-        addEquipment.setMinWidth(buttons.getPrefWidth());
-        back.setMinWidth(buttons.getPrefWidth());
-
-        save.setOnAction(e -> {
-            screenController.activate("main");
-        });
-        addEquipment.setOnAction(e -> {
-            if (equipmentStage == null) {
-                addEquipmentStage();
-            }
-        });
-        back.setOnAction(e -> {
-            eventName.clear();
-            startDate.setValue(LocalDate.now());
-            startTime.clear();
-            if (equipmentStage != null) {
-                equipmentStage.close();
-                equipmentStage = null;
-            }
-            screenController.activate("main");
-        });
+        eventName.setMaxWidth(textInput.getPrefWidth());
+        startDate.setMaxWidth(textInput.getPrefWidth());
+        startTime.setMaxWidth(textInput.getPrefWidth());
 
         textInput.getChildren().addAll(eventName, startDate, startTime);
-        buttons.getChildren().addAll(save, addEquipment, back);
-        equipmentListBox.getChildren().addAll(new Label("Current equipment"), equipmentList);
-
         optionsVBox.getChildren().addAll(textInput);
-        dividerHBox.getChildren().addAll(optionsVBox, equipmentListBox);
         optionsVBox.setAlignment(Pos.CENTER);
-        dividerHBox.setAlignment(Pos.CENTER);
-        newEventVBox.setAlignment(Pos.CENTER);
 
-        newEventVBox.getChildren().addAll(title, dividerHBox, buttons);
+        newEventBorderPane.setTop(title);
+        title.setAlignment(Pos.CENTER);
+        newEventBorderPane.setCenter(optionsVBox);
+        newEventBorderPane.setRight(equipmentListBox);
+        newEventBorderPane.setLeft(sidebar);
+        newEventBorderPane.setBottom(buttons);
     }
 
     private void addEquipmentStage() {
@@ -223,9 +201,7 @@ public class JobProfileApplication extends Application {
             equipmentStage.close();
             equipmentStage = null;
         });
-        equipmentStage.setOnCloseRequest(e -> {
-            equipmentStage = null;
-        });
+        equipmentStage.setOnCloseRequest(e -> equipmentStage = null);
 
         VBox curEquip = new VBox(10);
         VBox avaEquip = new VBox(10);
@@ -248,16 +224,134 @@ public class JobProfileApplication extends Application {
         Scene equipmentStageScene = new Scene(addEquipmentVBox, 400, 650);
         equipmentStage.setScene(equipmentStageScene);
         equipmentStage.show();
+    }
 
+    private void initVideoEventOptions() {
+        videoBP = new BorderPane();
+        videoBP.setPadding(new Insets(25, 25, 25, 25));
+        VBox selector = eventTypeSelector();
+        VBox equipmentView = equipmentView();
+        HBox buttons = bottom();
+        GridPane options = new GridPane();
+        options.setPadding(new Insets(10, 10, 10, 10));
+        options.setHgap(5);
+        options.setVgap(5);
+        buttons.setPrefWidth(150);
+
+        ComboBox<String> destination = new ComboBox<>();
+        ComboBox<String> output = new ComboBox<>();
+        ComboBox<String> ratio = new ComboBox<>();
+        ComboBox<String> frequency = new ComboBox<>();
+        ComboBox<String> resolution = new ComboBox<>();
+        ComboBox<String> fps = new ComboBox<>();
+        ComboBox<String> location = new ComboBox<>();
+        TextField cameras = new TextField();
+        cameras.setPromptText("Number of cameras");
+        TextField length = new TextField();
+        length.setPromptText("Estimated length (hours)");
+
+        options.addRow(0, new Label("Delivery destination:"), destination);
+        options.addRow(1, new Label("Output format:"), output);
+        options.addRow(2, new Label("Aspect ratio:"), ratio);
+        options.addRow(3, new Label("System frequency:"), frequency);
+        options.addRow(4, new Label("Resolution:"), resolution);
+        options.addRow(5, new Label("FPS:"), fps);
+        options.addRow(6, new Label("Indoor/outdoor:"), location);
+        options.add(cameras, 0, 7, 2, 1);
+        options.add(length, 0, 8, 2, 1);
+
+        cameras.setMinWidth(250);
+        length.setMinWidth(250);
+
+        options.setAlignment(Pos.CENTER);
+        videoBP.setTop(new Label("Video options."));
+        videoBP.setLeft(selector);
+        videoBP.setCenter(options);
+        videoBP.setRight(equipmentView);
+        videoBP.setBottom(buttons);
+    }
+
+    private void initPhotoEventOptions() {
+        photoBP = new BorderPane();
+        photoBP.setPadding(new Insets(25, 25, 25, 25));
+        GridPane options = new GridPane();
+        options.setHgap(5);
+        options.setVgap(5);
+        options.setAlignment(Pos.CENTER);
+        VBox equipmentView = equipmentView();
+        HBox buttons = bottom();
+        VBox selector = eventTypeSelector();
+
+        ComboBox<String> destination = new ComboBox<>(); // change to checklist
+        ComboBox<String> format = new ComboBox<>();
+        ComboBox<String> ratio = new ComboBox<>();
+        TextField sizing = new TextField();
+        sizing.setPromptText("Other sizing information.");
+        TextField PPI = new TextField();
+        TextField DPI = new TextField();
+        PPI.setPromptText("PPI");
+        DPI.setPromptText("DPI");
+        ComboBox<String> locations = new ComboBox<>(); // change to checklist
+        TextField other = new TextField();
+        other.setPromptText("Other information.");
+
+        sizing.setMinWidth(250);
+        PPI.setMinWidth(250);
+        DPI.setMinWidth(250);
+        other.setMinWidth(250);
+
+        options.addRow(0, new Label("Delivery destinations:"), destination);
+        options.addRow(1, new Label("Format:"), format);
+        options.addRow(2, new Label("Aspect ratio:"), ratio);
+        options.add(sizing, 0, 3, 2, 1);
+        options.addRow(4, new Label("DPI:"), DPI);
+        options.addRow(5, new Label("PPI:"), PPI);
+        options.addRow(6, new Label("Locations:"), locations);
+        options.add(other, 0, 7, 2, 1);
+
+        photoBP.setTop(new Label("Photo options."));
+        photoBP.setLeft(selector);
+        photoBP.setRight(equipmentView);
+        photoBP.setBottom(buttons);
+        photoBP.setCenter(options);
+
+    }
+
+    private void initAudioEventOptions() {
+        audioBP = new BorderPane();
+        audioBP.setPadding(new Insets(25, 25, 25, 25));
+        VBox equipmentView = equipmentView();
+        HBox buttons = bottom();
+        VBox selector = eventTypeSelector();
+        GridPane options = new GridPane();
+        options.setHgap(5);
+        options.setVgap(5);
+
+        CheckBox liveSound = new CheckBox("Live audio");
+        CheckBox recordingLive = new CheckBox("Live recording");
+        CheckBox recordingStudio = new CheckBox("Studio recording");
+        ComboBox<String> format = new ComboBox<>();
+        ComboBox<String> destination = new ComboBox<>();
+
+        options.add(liveSound, 0, 0, 2, 1);
+        options.add(recordingLive, 0, 1, 2, 1);
+        options.add(recordingStudio, 0, 2, 2, 1);
+        options.addRow(3, new Label("Output format:"), format);
+        options.addRow(4, new Label("Delivery destination:"), destination);
+        options.setAlignment(Pos.CENTER);
+
+        audioBP.setTop(new Label("Audio options."));
+        audioBP.setLeft(selector);
+        audioBP.setRight(equipmentView);
+        audioBP.setBottom(buttons);
+        audioBP.setCenter(options);
     }
 
     private void initCalExportScene() {
         exportCalVBox = new VBox();
 
         Button back = new Button("Back");
-        back.setOnAction(e -> {
-            screenController.activate("main");
-        });
+        back.setOnAction(e -> screenController.activate("main"));
 
         exportCalVBox.getChildren().addAll(back);
     }
@@ -266,9 +360,7 @@ public class JobProfileApplication extends Application {
         viewEventsVBox = new VBox();
 
         Button back = new Button("Back");
-        back.setOnAction(e -> {
-            screenController.activate("main");
-        });
+        back.setOnAction(e -> screenController.activate("main"));
 
         viewEventsVBox.getChildren().addAll(back);
     }
@@ -289,9 +381,7 @@ public class JobProfileApplication extends Application {
         newEquipment.setOnAction(e -> {
 
         });
-        back.setOnAction(e -> {
-            screenController.activate("main");
-        });
+        back.setOnAction(e -> screenController.activate("main"));
 
         adminVBox.getChildren().addAll(new Label("Administration"), viewEquipment, newEquipment, back);
     }
@@ -304,7 +394,10 @@ public class JobProfileApplication extends Application {
         screenController.addScreen("export", exportCalVBox);
         screenController.addScreen("viewEvents", viewEventsVBox);
         screenController.addScreen("admin", adminVBox);
-        screenController.addScreen("event", newEventVBox);
+        screenController.addScreen("event", newEventBorderPane);
+        screenController.addScreen("video", videoBP);
+        screenController.addScreen("photo", photoBP);
+        screenController.addScreen("audio", audioBP);
     }
 
     private void initButtons() {
@@ -324,28 +417,12 @@ public class JobProfileApplication extends Application {
     }
 
     private void initButtonHandler() {
-        createInvoice.setOnAction(e -> {
-            screenController.activate("invoice");
-        });
+        createInvoice.setOnAction(e -> screenController.activate("invoice"));
         newEvent.setOnAction(e -> {
 //            String job = initChoiceDialog();
-//            if (job.equals("Video production")) {
-//
-//            }
-//            else if (job.equals("Audio production")) {
-//
-//            }
-//            else if (job.equals("Still photography")) {
-//
-//            }
-//            else {
-//
-//            }
             screenController.activate("event");
         });
-        exportCal.setOnAction(e -> {
-            screenController.activate("export");
-        });
+        exportCal.setOnAction(e -> screenController.activate("export"));
         viewEvents.setOnAction(e -> {
             //screenController.activate("viewEvents");
             Alert a = new Alert(Alert.AlertType.INFORMATION);
@@ -354,9 +431,78 @@ public class JobProfileApplication extends Application {
             a.show();
 
         });
-        admin.setOnAction(e -> {
-            screenController.activate("admin");
+        admin.setOnAction(e -> screenController.activate("admin"));
+    }
+
+    private VBox eventTypeSelector() {
+        VBox list = new VBox(10);
+
+        Button mainScreen = new Button("Main");
+        Button videoOptions = new Button("Video");
+        Button photoOptions = new Button("Photos");
+        Button audioOptions = new Button("Sound");
+
+        mainScreen.setOnAction(e -> screenController.activate("event"));
+        videoOptions.setOnAction(e -> screenController.activate("video"));
+        photoOptions.setOnAction(e -> screenController.activate("photo"));
+        audioOptions.setOnAction(e -> screenController.activate("audio"));
+
+        list.getChildren().addAll(mainScreen, videoOptions, photoOptions, audioOptions);
+        list.setAlignment(Pos.CENTER_LEFT);
+        list.setPrefWidth(100);
+        mainScreen.setMinWidth(list.getPrefWidth());
+        videoOptions.setMinWidth(list.getPrefWidth());
+        photoOptions.setMinWidth(list.getPrefWidth());
+        audioOptions.setMinWidth(list.getPrefWidth());
+
+        return list;
+    }
+
+    private HBox bottom() {
+        HBox buttons = new HBox(10);
+        buttons.setPrefWidth(150);
+        buttons.setAlignment(Pos.CENTER);
+        buttons.setPadding(new Insets(25, 25, 0, 25));
+
+        Button save = new Button("Save and add event");
+        Button addEquipment = new Button("Add equipment");
+        Button back = new Button("Back");
+        save.setMinWidth(buttons.getPrefWidth());
+        addEquipment.setMinWidth(buttons.getPrefWidth());
+        back.setMinWidth(buttons.getPrefWidth());
+
+        buttons.getChildren().addAll(save, addEquipment, back);
+
+        save.setOnAction(e -> screenController.activate("main"));
+        addEquipment.setOnAction(e -> {
+            if (equipmentStage == null) {
+                addEquipmentStage();
+            }
         });
+        back.setOnAction(e -> {
+            eventName.clear();
+            startDate.setValue(LocalDate.now());
+            startTime.clear();
+            if (equipmentStage != null) {
+                equipmentStage.close();
+                equipmentStage = null;
+            }
+            screenController.activate("main");
+        });
+
+        return buttons;
+    }
+
+    private VBox equipmentView() {
+        VBox equipmentListBox = new VBox(10);
+
+        Label title = new Label("Current equipment:");
+        ListView<String> equipmentList = new ListView<>(currentJobEquipment);
+
+        equipmentListBox.getChildren().addAll(title, equipmentList);
+        equipmentListBox.setAlignment(Pos.CENTER);
+
+        return equipmentListBox;
     }
 
     private String initChoiceDialog() {
