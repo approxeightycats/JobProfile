@@ -1,10 +1,6 @@
 package com.model;
 
-import com.db.DBInterface;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.db.DBController;
 
 /**
  * Contains technical data for a given job.
@@ -20,7 +16,7 @@ public class Job {
     private String status;
 
     public Job(String clientID) {
-        jobID = DBInterface.getOpenJobID();
+        jobID = DBController.getOpenJobID();
         this.clientID = clientID;
     }
 

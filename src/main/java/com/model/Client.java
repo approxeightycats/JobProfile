@@ -1,6 +1,6 @@
 package com.model;
 
-import com.db.DBInterface;
+import com.db.DBController;
 
 /**
  * contains a client's info
@@ -15,7 +15,7 @@ public class Client {
     private String address;
 
     public Client() {
-        clientID = DBInterface.getOpenClientID();
+        clientID = DBController.getOpenClientID();
     }
 
 

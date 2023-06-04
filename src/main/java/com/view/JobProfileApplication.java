@@ -1,6 +1,6 @@
 package com.view;
 
-import com.db.DBInterface;
+import com.db.DBController;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -13,10 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
@@ -28,28 +25,29 @@ public class JobProfileApplication extends Application {
 
     private VBox mainVBox;
     private VBox createInvoiceVBox;
-    private BorderPane newEventBorderPane;
+    private BorderPane newJobBorderPane;
     private BorderPane videoBP;
     private BorderPane photoBP;
     private BorderPane audioBP;
     private VBox exportCalVBox;
-    private VBox viewEventsVBox;
+    private VBox viewJobsVBox;
     private VBox adminVBox;
     private ObservableList<String> upcoming;
     private VBox actions;
     private Button createInvoice;
-    private Button newEvent;
+    private Button newJob;
     private Button exportCal;
-    private Button viewEvents;
+    private Button viewJobs;
     private Button admin;
-    private TextField eventName;
+    private TextField jobName;
     private DatePicker startDate;
     private TextField startTime;
     private Scene mainPage;
     private ScreenController screenController;
-    private DBInterface dbInterface;
+    private DBController dbController;
     private Stage equipmentStage;
     private ObservableList<String> currentJobEquipment;
+    private BorderPane viewClientsPane;
 
     public static void main(String[] args) {
         launch(args);
@@ -57,7 +55,7 @@ public class JobProfileApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        dbInterface = new DBInterface();
+        dbController = new DBController();
         mainVBox = new VBox();
         mainVBox.setPadding(new Insets(25, 25, 25, 25));
         mainVBox.setSpacing(10);
@@ -83,24 +81,24 @@ public class JobProfileApplication extends Application {
         actions.setPrefWidth(150);
         actions.setSpacing(10);
         upcoming = FXCollections.observableArrayList("a", "b");
-        ListView<String> upcomingEvents = new ListView<>(upcoming);
-        upcomingEvents.setMinWidth(150);
+        ListView<String> upcomingJobs = new ListView<>(upcoming);
+        upcomingJobs.setMinWidth(150);
         initButtons();
         initOtherScenes();
-        actions.getChildren().addAll(createInvoice, newEvent, exportCal, viewEvents, admin);
+        actions.getChildren().addAll(createInvoice, newJob, exportCal, viewJobs, admin);
         Label title = new Label("Upcoming jobs");
-        mainVBox.getChildren().addAll(title, upcomingEvents, actions);
+        mainVBox.getChildren().addAll(title, upcomingJobs, actions);
         mainVBox.setAlignment(Pos.CENTER);
     }
 
     private void initOtherScenes() {
         initInvoiceScene();
-        initEventScene();
+        initJobScene();
         initCalExportScene();
-        initEventViewScene();
-        initVideoEventOptions();
-        initPhotoEventOptions();
-        initAudioEventOptions();
+        initJobViewScene();
+        initVideoJobOptions();
+        initPhotoJobOptions();
+        initAudioJobOptions();
         initAdminScene();
     }
 
@@ -113,11 +111,11 @@ public class JobProfileApplication extends Application {
         createInvoiceVBox.getChildren().addAll(back);
     }
 
-    private void initEventScene() {
-        newEventBorderPane = new BorderPane();
+    private void initJobScene() {
+        newJobBorderPane = new BorderPane();
         VBox optionsVBox = new VBox();
 
-        newEventBorderPane.setPadding(new Insets(25, 25, 25, 25));
+        newJobBorderPane.setPadding(new Insets(25, 25, 25, 25));
         optionsVBox.setPadding(new Insets(25, 25, 25, 25));
         optionsVBox.setSpacing(10);
 
@@ -128,11 +126,11 @@ public class JobProfileApplication extends Application {
         VBox textInput = new VBox();
         HBox buttons = bottom();
         VBox equipmentListBox = equipmentView();
-        VBox sidebar = eventTypeSelector();
+        VBox sidebar = jobTypeSelector();
 
-        Label title = new Label("Add event");
-        eventName = new TextField();
-        eventName.setPromptText("Enter the name of the event.");
+        Label title = new Label("Add job");
+        jobName = new TextField();
+        jobName.setPromptText("Enter the name of the job.");
         startDate = new DatePicker(LocalDate.now());
         startTime = new TextField();
         startTime.setPromptText("Enter a time range.");
@@ -141,20 +139,20 @@ public class JobProfileApplication extends Application {
         textInput.setPrefWidth(200);
         textInput.setSpacing(10);
 
-        eventName.setMaxWidth(textInput.getPrefWidth());
+        jobName.setMaxWidth(textInput.getPrefWidth());
         startDate.setMaxWidth(textInput.getPrefWidth());
         startTime.setMaxWidth(textInput.getPrefWidth());
 
-        textInput.getChildren().addAll(eventName, startDate, startTime);
+        textInput.getChildren().addAll(jobName, startDate, startTime);
         optionsVBox.getChildren().addAll(textInput);
         optionsVBox.setAlignment(Pos.CENTER);
 
-        newEventBorderPane.setTop(title);
+        newJobBorderPane.setTop(title);
         title.setAlignment(Pos.CENTER);
-        newEventBorderPane.setCenter(optionsVBox);
-        newEventBorderPane.setRight(equipmentListBox);
-        newEventBorderPane.setLeft(sidebar);
-        newEventBorderPane.setBottom(buttons);
+        newJobBorderPane.setCenter(optionsVBox);
+        newJobBorderPane.setRight(equipmentListBox);
+        newJobBorderPane.setLeft(sidebar);
+        newJobBorderPane.setBottom(buttons);
     }
 
     private void addEquipmentStage() {
@@ -226,10 +224,10 @@ public class JobProfileApplication extends Application {
         equipmentStage.show();
     }
 
-    private void initVideoEventOptions() {
+    private void initVideoJobOptions() {
         videoBP = new BorderPane();
         videoBP.setPadding(new Insets(25, 25, 25, 25));
-        VBox selector = eventTypeSelector();
+        VBox selector = jobTypeSelector();
         VBox equipmentView = equipmentView();
         HBox buttons = bottom();
         GridPane options = new GridPane();
@@ -271,7 +269,7 @@ public class JobProfileApplication extends Application {
         videoBP.setBottom(buttons);
     }
 
-    private void initPhotoEventOptions() {
+    private void initPhotoJobOptions() {
         photoBP = new BorderPane();
         photoBP.setPadding(new Insets(25, 25, 25, 25));
         GridPane options = new GridPane();
@@ -280,7 +278,7 @@ public class JobProfileApplication extends Application {
         options.setAlignment(Pos.CENTER);
         VBox equipmentView = equipmentView();
         HBox buttons = bottom();
-        VBox selector = eventTypeSelector();
+        VBox selector = jobTypeSelector();
 
         ComboBox<String> destination = new ComboBox<>(); // change to checklist
         ComboBox<String> format = new ComboBox<>();
@@ -317,12 +315,12 @@ public class JobProfileApplication extends Application {
 
     }
 
-    private void initAudioEventOptions() {
+    private void initAudioJobOptions() {
         audioBP = new BorderPane();
         audioBP.setPadding(new Insets(25, 25, 25, 25));
         VBox equipmentView = equipmentView();
         HBox buttons = bottom();
-        VBox selector = eventTypeSelector();
+        VBox selector = jobTypeSelector();
         GridPane options = new GridPane();
         options.setHgap(5);
         options.setVgap(5);
@@ -356,13 +354,13 @@ public class JobProfileApplication extends Application {
         exportCalVBox.getChildren().addAll(back);
     }
 
-    private void initEventViewScene() {
-        viewEventsVBox = new VBox();
+    private void initJobViewScene() {
+        viewJobsVBox = new VBox();
 
         Button back = new Button("Back");
         back.setOnAction(e -> screenController.activate("main"));
 
-        viewEventsVBox.getChildren().addAll(back);
+        viewJobsVBox.getChildren().addAll(back);
     }
 
     private void initAdminScene() {
@@ -373,6 +371,8 @@ public class JobProfileApplication extends Application {
 
         Button viewEquipment = new Button("View equipment");
         Button newEquipment = new Button("Add new equipment");
+        Button viewClients = new Button("View clients");
+        Button addClients = new Button("Add clients");
         Button back = new Button("Back");
 
         viewEquipment.setOnAction(e -> {
@@ -381,36 +381,44 @@ public class JobProfileApplication extends Application {
         newEquipment.setOnAction(e -> {
 
         });
+        viewClients.setOnAction(e -> screenController.activate("view clients"));
+        addClients.setOnAction(e -> {
+
+        });
         back.setOnAction(e -> screenController.activate("main"));
 
-        adminVBox.getChildren().addAll(new Label("Administration"), viewEquipment, newEquipment, back);
+        adminVBox.getChildren().addAll(new Label("Administration"), viewEquipment, newEquipment, viewClients, addClients, back);
     }
 
     private void initScreenController() {
         mainPage = new Scene(mainVBox);
+
+        viewClientsPane = new ViewClientsPane().getViewClientsPane();
+
         screenController = new ScreenController(mainPage);
         screenController.addScreen("main", mainVBox);
         screenController.addScreen("invoice", createInvoiceVBox);
         screenController.addScreen("export", exportCalVBox);
-        screenController.addScreen("viewEvents", viewEventsVBox);
+        screenController.addScreen("viewJobs", viewJobsVBox);
         screenController.addScreen("admin", adminVBox);
-        screenController.addScreen("event", newEventBorderPane);
+        screenController.addScreen("job", newJobBorderPane);
         screenController.addScreen("video", videoBP);
         screenController.addScreen("photo", photoBP);
         screenController.addScreen("audio", audioBP);
+        screenController.addScreen("view clients", viewClientsPane);
     }
 
     private void initButtons() {
         createInvoice = new Button("Create Invoice");
-        newEvent = new Button("New Event");
+        newJob = new Button("New Job");
         exportCal = new Button("Export Calendar");
-        viewEvents = new Button("View Events");
+        viewJobs = new Button("View Jobs");
         admin = new Button("Administration");
 
         createInvoice.setMinWidth(actions.getPrefWidth());
-        newEvent.setMinWidth(actions.getPrefWidth());
+        newJob.setMinWidth(actions.getPrefWidth());
         exportCal.setMinWidth(actions.getPrefWidth());
-        viewEvents.setMinWidth(actions.getPrefWidth());
+        viewJobs.setMinWidth(actions.getPrefWidth());
         admin.setMinWidth(actions.getPrefWidth());
 
         initButtonHandler();
@@ -418,13 +426,13 @@ public class JobProfileApplication extends Application {
 
     private void initButtonHandler() {
         createInvoice.setOnAction(e -> screenController.activate("invoice"));
-        newEvent.setOnAction(e -> {
+        newJob.setOnAction(e -> {
 //            String job = initChoiceDialog();
-            screenController.activate("event");
+            screenController.activate("job");
         });
         exportCal.setOnAction(e -> screenController.activate("export"));
-        viewEvents.setOnAction(e -> {
-            //screenController.activate("viewEvents");
+        viewJobs.setOnAction(e -> {
+            //screenController.activate("viewJobs");
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setHeaderText("do stuff!!!");
             a.setContentText("this will probably open a calendar in another window");
@@ -434,7 +442,7 @@ public class JobProfileApplication extends Application {
         admin.setOnAction(e -> screenController.activate("admin"));
     }
 
-    private VBox eventTypeSelector() {
+    private VBox jobTypeSelector() {
         VBox list = new VBox(10);
 
         Button mainScreen = new Button("Main");
@@ -442,7 +450,7 @@ public class JobProfileApplication extends Application {
         Button photoOptions = new Button("Photos");
         Button audioOptions = new Button("Sound");
 
-        mainScreen.setOnAction(e -> screenController.activate("event"));
+        mainScreen.setOnAction(e -> screenController.activate("job"));
         videoOptions.setOnAction(e -> screenController.activate("video"));
         photoOptions.setOnAction(e -> screenController.activate("photo"));
         audioOptions.setOnAction(e -> screenController.activate("audio"));
@@ -464,7 +472,7 @@ public class JobProfileApplication extends Application {
         buttons.setAlignment(Pos.CENTER);
         buttons.setPadding(new Insets(25, 25, 0, 25));
 
-        Button save = new Button("Save and add event");
+        Button save = new Button("Save and add job");
         Button addEquipment = new Button("Add equipment");
         Button back = new Button("Back");
         save.setMinWidth(buttons.getPrefWidth());
@@ -480,7 +488,7 @@ public class JobProfileApplication extends Application {
             }
         });
         back.setOnAction(e -> {
-            eventName.clear();
+            jobName.clear();
             startDate.setValue(LocalDate.now());
             startTime.clear();
             if (equipmentStage != null) {
