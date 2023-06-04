@@ -9,39 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="caad267f-6d90-4920-8e98-c4b2e244422b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/commons-beanutils-1.9.4.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/commons-codec-1.15.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/commons-collections-3.2.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/commons-collections4-4.4.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/commons-digester-2.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/commons-lang3-3.12.0.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/commons-logging-1.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/commons-validator-1.7.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/controlsfx-11.1.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ical4j-4.0.0-beta2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ikonli-core-12.3.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ikonli-fontawesome-pack-12.3.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ikonli-javafx-12.3.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/javafx-base-19-linux.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/javafx-controls-19-linux.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/javafx-graphics-19-linux.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/jool-java-8-0.9.14.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/slf4j-api-1.7.36.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/threeten-extra-1.7.0.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/view-11.12.5.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/db/DBInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/db/DBController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Job.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Job.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/view/CalendarView.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/view/JobProfileApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/view/JobProfileApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/view/JobProfileCLI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/view/JobProfileCLI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/view/main-view.fxml" beforeDir="false" />
-    </list>
+    <list default="true" id="caad267f-6d90-4920-8e98-c4b2e244422b" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -192,7 +160,7 @@
       <workItem from="1685623477576" duration="3935000" />
       <workItem from="1685627520927" duration="1706000" />
       <workItem from="1685875815918" duration="4583000" />
-      <workItem from="1685883579957" duration="6770000" />
+      <workItem from="1685883579957" duration="7350000" />
     </task>
     <servers />
   </component>
