@@ -1,4 +1,4 @@
-package com.db;
+package com.controller;
 
 import com.model.Client;
 import com.model.Equipment;
@@ -17,9 +17,7 @@ public class DBController {
     private static volatile DBController instance;
     private static final String URL = "jdbc:sqlite:src/main/resources/info.db";
 
-    private DBController() {
-
-    }
+    private DBController() { }
 
     public static DBController getInstance() {
         DBController result = instance;

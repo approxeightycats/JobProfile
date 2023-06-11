@@ -1,24 +1,59 @@
 package com.model;
 
-import com.db.DBController;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * contains a client's info
  */
 public class Client {
 
-    private String firstName;
-    private String lastName;
-    private String title;
-    private String email;
-    private String phone;
-    private String address;
-    private String optionalContact1;
-    private String optionalContact2;
-    private String optionalContact3;
+    private StringProperty firstName;
+    private StringProperty lastName;
+    private StringProperty clientID;
 
+    public void setClientID(String val) {
+        clientIDProperty().set(val);
+    }
 
-    public Client(String clientID) {
+    public void setFirstName(String val) {
+        firstNameProperty().set(val);
+    }
 
+    public void setLastName(String val) {
+        lastNameProperty().set(val);
+    }
+
+    public String getClientID() {
+        return clientIDProperty().get();
+    }
+
+    public String getFirstName() {
+        return firstNameProperty().get();
+    }
+
+    public String getLastName() {
+        return lastNameProperty().get();
+    }
+
+    private StringProperty clientIDProperty() {
+        if (clientID == null) {
+            clientID = new SimpleStringProperty(this, "clientID");
+        }
+        return clientID;
+    }
+
+    public StringProperty firstNameProperty() {
+        if (firstName == null) {
+            firstName = new SimpleStringProperty(this, "firstName");
+        }
+        return firstName;
+    }
+
+    public StringProperty lastNameProperty() {
+        if (lastName == null) {
+            lastName = new SimpleStringProperty(this, "lastName");
+        }
+        return lastName;
     }
 }

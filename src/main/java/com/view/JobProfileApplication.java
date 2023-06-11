@@ -1,6 +1,7 @@
 package com.view;
 
-import com.db.DBController;
+import com.controller.DBController;
+import com.controller.ScreenController;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

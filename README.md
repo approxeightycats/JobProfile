@@ -1,1 +1,1 @@
-text
+requires JDK 20

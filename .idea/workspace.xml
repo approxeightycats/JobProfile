@@ -10,15 +10,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="caad267f-6d90-4920-8e98-c4b2e244422b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/view/AddClientStage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/db/DBController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/db/DBController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/db/DBController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/DBController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/view/AddClientPane.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Job.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Job.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/view/AddClientStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/view/AddClientStage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/view/JobProfileApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/view/JobProfileApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/view/JobProfileCLI.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/view/ScreenController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/view/ScreenController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/view/ScreenController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/ScreenController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/view/ViewClientsPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/view/ViewClientsPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,11 +85,11 @@
   </component>
   <component name="RunManager" selected="Application.JobProfileApplication">
     <configuration name="DBController" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.db.DBController" />
+      <option name="MAIN_CLASS_NAME" value="com.controller.DBController" />
       <module name="JobProfile" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.db.*" />
+          <option name="PATTERN" value="com.controller.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -113,7 +115,7 @@
       <module name="JobProfile" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.view.*" />
+          <option name="PATTERN" value="com.controller.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -126,7 +128,7 @@
       <module name="JobProfile" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.view.*" />
+          <option name="PATTERN" value="com.controller.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -179,7 +181,7 @@
       <workItem from="1686232878785" duration="1033000" />
       <workItem from="1686298596548" duration="47000" />
       <workItem from="1686477388965" duration="2000" />
-      <workItem from="1686481608250" duration="6515000" />
+      <workItem from="1686481608250" duration="9746000" />
     </task>
     <servers />
   </component>

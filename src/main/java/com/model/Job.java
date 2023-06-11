@@ -1,6 +1,6 @@
 package com.model;
 
-import com.db.DBController;
+import com.controller.DBController;
 
 /**
  * Contains technical data for a given job.

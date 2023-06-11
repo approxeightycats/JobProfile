@@ -1,6 +1,6 @@
 package com.view;
 
-import com.db.DBController;
+import com.controller.DBController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
