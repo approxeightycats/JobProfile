@@ -45,7 +45,6 @@ public class JobProfileApplication extends Application {
     private TextField startTime;
     private Scene mainPage;
     private ScreenController screenController;
-    private DBController dbController;
     private Stage equipmentStage;
     private ObservableList<String> currentJobEquipment;
     private BorderPane viewClientsPane;
@@ -56,7 +55,6 @@ public class JobProfileApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        dbController = DBController.getInstance();
         mainVBox = new VBox();
         mainVBox.setPadding(new Insets(25, 25, 25, 25));
         mainVBox.setSpacing(10);

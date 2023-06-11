@@ -5,21 +5,21 @@ import com.controller.ScreenController;
 import com.model.Client;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ViewClientsPane {
 
     private final BorderPane viewClientsPane;
     private DBController dbController;
     private ObservableList<Client> clients;
-    private ListView<String> clientView;
     private final ScreenController screenController;
     private TableView<Client> tableView;
 
@@ -28,9 +28,6 @@ public class ViewClientsPane {
         viewClientsPane = new BorderPane();
         viewClientsPane.setPadding(new Insets(25, 25, 25, 25));
         dbController = DBController.getInstance();
-//        clients = FXCollections.observableArrayList(DBController.getEssentialClientData());
-//        clientView = new ListView<>(clients);
-//        updateList();
 
         setupTable();
 
@@ -40,9 +37,19 @@ public class ViewClientsPane {
         back.setOnAction(e -> {
             screenController.activate("admin");
         });
+        Button newClient = new Button("Add new client");
+        newClient.setOnAction(e -> {
+            AddClientStage cStage = new AddClientStage();
+            cStage.showStage();
+            back.addEventHandler(ActionEvent.ACTION, event -> cStage.closeStage());
+        });
+
+        HBox buttons = new HBox(10);
+        buttons.getChildren().addAll(back, newClient);
 
         viewClientsPane.setCenter(tableView);
-        viewClientsPane.setBottom(back);
+        viewClientsPane.setBottom(buttons);
+
 
     }
 
@@ -52,7 +59,7 @@ public class ViewClientsPane {
 
     private void setupTable() {
         tableView = new TableView<>();
-        ArrayList<Client> list = getClients();
+        ArrayList<Client> list = DBController.getAllClients();
         clients = FXCollections.observableArrayList(list);
         tableView.setItems(clients);
 
@@ -64,22 +71,6 @@ public class ViewClientsPane {
         firstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
 
         tableView.getColumns().setAll(clientIDCol, lastNameCol, firstNameCol);
-    }
-
-    private ArrayList<Client> getClients() {
-        ArrayList<Client> cList = new ArrayList<>();
-        List<String> clientStrings = DBController.getEssentialClientData();
-
-        for (String s : clientStrings) {
-            String[] split = s.split(",");
-            Client c = new Client();
-            c.setClientID(split[0]);
-            c.setFirstName(split[1]);
-            c.setLastName(split[2]);
-            cList.add(c);
-        }
-
-        return cList;
     }
 
     protected BorderPane getViewClientsPane() {

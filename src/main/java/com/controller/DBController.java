@@ -73,11 +73,12 @@ public class DBController {
         }
     }
 
-    public void addClient(Client client) {
-        String sql = "INSERT INTO CLIENTS (CODE, NAME, TITLE, EMAIL, PHONE, ADDRESS) VALUES (?, ?, ?, ?, ?, ?)";
+    public static void addClient(Client client) {
+        String sql = "INSERT INTO CLIENTS (FIRST_NAME, LAST_NAME) VALUES (?, ?)";
         try (Connection conn = connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
+            ps.setString(1, client.getFirstName());
+            ps.setString(2, client.getLastName());
             ps.executeUpdate();
         }
         catch (SQLException e) {
@@ -85,35 +86,24 @@ public class DBController {
         }
     }
 
-    public static List<String> getEssentialClientData() {
-        ArrayList<String> clients = new ArrayList<>();
-        String sql = "SELECT CLIENT_ID, FIRST_NAME, LAST_NAME FROM CLIENTS";
+    public static ArrayList<Client> getAllClients() {
+        ArrayList<Client> clients = new ArrayList<>();
+        String sql = "SELECT * FROM CLIENTS";
         try (Connection conn = connect();
              Statement stmt  = conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)) {
-            // loop through the result set
             while (rs.next()) {
-                String line = String.join(", ",
-                        rs.getString("CLIENT_ID"),
-                        rs.getString("FIRST_NAME"),
-                        rs.getString("LAST_NAME"));
-                clients.add(line);
+                Client c = new Client();
+                c.setClientID(rs.getString("CLIENT_ID"));
+                c.setFirstName(rs.getString("FIRST_NAME"));
+                c.setLastName(rs.getString("LAST_NAME"));
+                clients.add(c);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return clients;
     }
-
-    public static List<String> getClientContactData() {
-        ArrayList<String> contacts = new ArrayList<>();
-
-
-
-        return contacts;
-    }
-
-
 
     public static void addEquipment(Equipment equipment) {
         String sql = "INSERT INTO EQUIPMENT(DEPARTMENT, ITEM, \"REPLACEMENT COST\", \"DATE OF SERVICE \") VALUES (?, ?, ?, ?)";

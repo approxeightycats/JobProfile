@@ -1,9 +1,11 @@
 package com.view;
 
 import com.controller.DBController;
+import com.model.Client;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -14,7 +16,6 @@ import javafx.stage.Stage;
 
 public class AddClientStage {
 
-    private DBController dbController;
     private Stage clientStage;
     private BorderPane clientPane;
     private VBox input;
@@ -32,7 +33,6 @@ public class AddClientStage {
 
     AddClientStage() {
         clientStage = new Stage();
-        dbController = DBController.getInstance();
 
         clientStage.setMinHeight(400);
         clientStage.setMinWidth(250);
@@ -117,10 +117,30 @@ public class AddClientStage {
             closeStage();
         });
         submitButton.setOnAction(e -> {
-            if (firstName.getText().equals("")) {
-
+            if (checkValidInput()){
+                DBController.addClient(createClient());
             }
         });
+    }
+
+    private Client createClient() {
+        Client c = new Client();
+        c.setFirstName(firstName.getText());
+        c.setLastName(lastName.getText());
+        return c;
+    }
+
+    private boolean checkValidInput() {
+
+        if (!firstName.getText().equals("") && !lastName.getText().equals("")) {
+            return true;
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Invalid input.");
+            alert.setContentText("Please enter a valid first/last name.");
+            alert.showAndWait();
+            return false;
+        }
     }
 
 }

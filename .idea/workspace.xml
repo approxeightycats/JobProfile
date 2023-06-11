@@ -10,15 +10,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="caad267f-6d90-4920-8e98-c4b2e244422b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/db/DBController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/DBController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/Job.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/model/Job.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controller/DBController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/DBController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/model/VideoProdJob.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/view/AddClientStage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/view/AddClientStage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/view/JobProfileApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/view/JobProfileApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/view/ScreenController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controller/ScreenController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/view/ViewClientsPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/view/ViewClientsPane.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
     </list>
@@ -181,7 +176,7 @@
       <workItem from="1686232878785" duration="1033000" />
       <workItem from="1686298596548" duration="47000" />
       <workItem from="1686477388965" duration="2000" />
-      <workItem from="1686481608250" duration="9746000" />
+      <workItem from="1686481608250" duration="12626000" />
     </task>
     <servers />
   </component>
