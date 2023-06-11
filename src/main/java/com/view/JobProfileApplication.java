@@ -55,7 +55,7 @@ public class JobProfileApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        dbController = new DBController();
+        dbController = DBController.getInstance();
         mainVBox = new VBox();
         mainVBox.setPadding(new Insets(25, 25, 25, 25));
         mainVBox.setSpacing(10);
@@ -383,7 +383,8 @@ public class JobProfileApplication extends Application {
         });
         viewClients.setOnAction(e -> screenController.activate("view clients"));
         addClients.setOnAction(e -> {
-
+            AddClientStage cStage = new AddClientStage();
+            cStage.showStage();
         });
         back.setOnAction(e -> screenController.activate("main"));
 
@@ -392,10 +393,10 @@ public class JobProfileApplication extends Application {
 
     private void initScreenController() {
         mainPage = new Scene(mainVBox);
+        screenController = ScreenController.getInstance(mainPage);
 
-        viewClientsPane = new ViewClientsPane().getViewClientsPane();
+        viewClientsPane = new ViewClientsPane(mainPage).getViewClientsPane();
 
-        screenController = new ScreenController(mainPage);
         screenController.addScreen("main", mainVBox);
         screenController.addScreen("invoice", createInvoiceVBox);
         screenController.addScreen("export", exportCalVBox);

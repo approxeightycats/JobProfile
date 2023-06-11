@@ -7,63 +7,18 @@ import com.db.DBController;
  */
 public class Client {
 
-    private final String clientID;
-    private String name;
+    private String firstName;
+    private String lastName;
     private String title;
     private String email;
     private String phone;
     private String address;
-
-    public Client() {
-        clientID = DBController.getOpenClientID();
-    }
-
+    private String optionalContact1;
+    private String optionalContact2;
+    private String optionalContact3;
 
 
-    public String getClientID() {
-        return clientID;
-    }
+    public Client(String clientID) {
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getAddress() {
-        if (address == null) {
-            return "No address.";
-        }
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 }

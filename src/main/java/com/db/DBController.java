@@ -14,10 +14,24 @@ import java.util.Locale;
  */
 public class DBController {
 
+    private static volatile DBController instance;
     private static final String URL = "jdbc:sqlite:src/main/resources/info.db";
 
-    public DBController() {
+    private DBController() {
 
+    }
+
+    public static DBController getInstance() {
+        DBController result = instance;
+        if (result != null) {
+            return result;
+        }
+        synchronized (DBController.class) {
+            if (instance == null) {
+                instance = new DBController();
+            }
+            return instance;
+        }
     }
 
     public void viewTable() {
@@ -65,12 +79,7 @@ public class DBController {
         String sql = "INSERT INTO CLIENTS (CODE, NAME, TITLE, EMAIL, PHONE, ADDRESS) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, client.getClientID());
-            ps.setString(2, client.getName());
-            ps.setString(3, client.getTitle());
-            ps.setString(4, client.getEmail());
-            ps.setString(5, client.getPhone());
-            ps.setString(6, client.getAddress());
+
             ps.executeUpdate();
         }
         catch (SQLException e) {
@@ -78,7 +87,7 @@ public class DBController {
         }
     }
 
-    public static List<String> getClients() {
+    public static List<String> getEssentialClientData() {
         ArrayList<String> clients = new ArrayList<>();
         String sql = "SELECT CLIENT_ID, FIRST_NAME, LAST_NAME FROM CLIENTS";
         try (Connection conn = connect();
@@ -97,6 +106,16 @@ public class DBController {
         }
         return clients;
     }
+
+    public static List<String> getClientContactData() {
+        ArrayList<String> contacts = new ArrayList<>();
+
+
+
+        return contacts;
+    }
+
+
 
     public static void addEquipment(Equipment equipment) {
         String sql = "INSERT INTO EQUIPMENT(DEPARTMENT, ITEM, \"REPLACEMENT COST\", \"DATE OF SERVICE \") VALUES (?, ?, ?, ?)";
