@@ -47,7 +47,7 @@ public class JobProfileApplication extends Application {
     private ScreenController screenController;
     private Stage equipmentStage;
     private ObservableList<String> currentJobEquipment;
-    private BorderPane viewClientsPane;
+    private ViewClientsPane viewClientsPane;
 
     public static void main(String[] args) {
         launch(args);
@@ -370,8 +370,7 @@ public class JobProfileApplication extends Application {
 
         Button viewEquipment = new Button("View equipment");
         Button newEquipment = new Button("Add new equipment");
-        Button viewClients = new Button("View clients");
-        Button addClients = new Button("Add clients");
+        Button viewClients = new Button("View & add clients");
         Button back = new Button("Back");
 
         viewEquipment.setOnAction(e -> {
@@ -381,20 +380,16 @@ public class JobProfileApplication extends Application {
 
         });
         viewClients.setOnAction(e -> screenController.activate("view clients"));
-        addClients.setOnAction(e -> {
-            AddClientStage cStage = new AddClientStage();
-            cStage.showStage();
-        });
         back.setOnAction(e -> screenController.activate("main"));
 
-        adminVBox.getChildren().addAll(new Label("Administration"), viewEquipment, newEquipment, viewClients, addClients, back);
+        adminVBox.getChildren().addAll(new Label("Administration"), viewEquipment, newEquipment, viewClients, back);
     }
 
     private void initScreenController() {
         mainPage = new Scene(mainVBox);
         screenController = ScreenController.getInstance(mainPage);
 
-        viewClientsPane = new ViewClientsPane(mainPage).getViewClientsPane();
+        viewClientsPane = new ViewClientsPane(mainPage);
 
         screenController.addScreen("main", mainVBox);
         screenController.addScreen("invoice", createInvoiceVBox);
@@ -405,7 +400,7 @@ public class JobProfileApplication extends Application {
         screenController.addScreen("video", videoBP);
         screenController.addScreen("photo", photoBP);
         screenController.addScreen("audio", audioBP);
-        screenController.addScreen("view clients", viewClientsPane);
+        screenController.addScreen("view clients", viewClientsPane.getViewClientsPane());
     }
 
     private void initButtons() {

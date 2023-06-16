@@ -6,7 +6,6 @@ import com.model.Job;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -29,21 +28,6 @@ public class DBController {
                 instance = new DBController();
             }
             return instance;
-        }
-    }
-
-    public void viewTable() {
-        String sql = "SELECT JOBID, NAME FROM JOBS";
-        try (Connection conn = connect();
-             Statement stmt  = conn.createStatement();
-             ResultSet rs    = stmt.executeQuery(sql)) {
-            // loop through the result set
-            while (rs.next()) {
-                System.out.println(rs.getInt("JOBID") +  "\t" +
-                        rs.getString("NAME"));
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
         }
     }
 
@@ -73,7 +57,7 @@ public class DBController {
         }
     }
 
-    public static void addClient(Client client) {
+    public static void addClientName(Client client) {
         String sql = "INSERT INTO CLIENTS (FIRST_NAME, LAST_NAME) VALUES (?, ?)";
         try (Connection conn = connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -97,6 +81,11 @@ public class DBController {
                 c.setClientID(rs.getString("CLIENT_ID"));
                 c.setFirstName(rs.getString("FIRST_NAME"));
                 c.setLastName(rs.getString("LAST_NAME"));
+                c.setOrg(rs.getString("ORGANIZATION"));
+                c.setTitle(rs.getString("TITLE"));
+                c.setEmail(rs.getString("EMAIL"));
+                c.setPhone(rs.getString("PHONE"));
+                c.setAddress(rs.getString("ADDRESS"));
                 clients.add(c);
             }
         } catch (SQLException e) {
@@ -104,6 +93,76 @@ public class DBController {
         }
         return clients;
     }
+
+    public static String getClientID(String first, String last) {
+        String sql = "SELECT CLIENT_ID FROM CLIENTS WHERE FIRST_NAME = (?) AND LAST_NAME = (?)";
+        try (Connection conn = connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, first);
+            ps.setString(2, last);
+            ResultSet rs = ps.executeQuery();
+            String s = rs.getString("CLIENT_ID");
+            return s;
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return "";
+    }
+
+    public static Client getClient(String clientID) {
+        String sql = "SELECT FROM * CLIENTS WHERE CLIENT_ID = (?)";
+        try (Connection conn = connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, clientID);
+            ResultSet rs = ps.executeQuery();
+
+            Client c = new Client();
+            c.setClientID(rs.getString("CLIENT_ID"));
+            c.setFirstName(rs.getString("FIRST_NAME"));
+            c.setLastName(rs.getString("LAST_NAME"));
+            c.setTitle(rs.getString("TITLE"));
+            c.setOrg(rs.getString("ORGANIZATION"));
+            c.setEmail(rs.getString("EMAIL"));
+            c.setPhone(rs.getString("PHONE"));
+            c.setAddress(rs.getString("ADDRESS"));
+
+            return c;
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return new Client();
+    }
+
+
+    public static void removeClient(String id) {
+        String sql = "DELETE FROM CLIENTS WHERE CLIENT_ID = (?)";
+        try (Connection conn = connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, id);
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void setClientData(String field, String val, String id) {
+        String sql = "UPDATE CLIENTS SET (?) = (?) WHERE CLIENT_ID = (?)";
+        try (Connection conn = connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, field.toUpperCase());
+            ps.setString(2, val);
+            ps.setString(3, id);
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
 
     public static void addEquipment(Equipment equipment) {
         String sql = "INSERT INTO EQUIPMENT(DEPARTMENT, ITEM, \"REPLACEMENT COST\", \"DATE OF SERVICE \") VALUES (?, ?, ?, ?)";
@@ -171,26 +230,6 @@ public class DBController {
         }
 
         return someID + 1;
-    }
-
-    public static String getOpenClientID() {
-        int someID = 0;
-        String sql = "SElECT CODE FROM CLIENTS";
-        try (Connection conn = connect();
-             Statement stmt  = conn.createStatement();
-             ResultSet rs    = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                String c = rs.getString("CODE");
-                int cVal = Integer.parseInt(c.substring(1));
-                someID = Math.max(cVal, someID);
-            }
-        }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        someID++;
-        int padSize = 6 - Integer.toString(someID).length();
-        return "C" + String.format(Locale.US, "%0" + padSize + "d", someID);
     }
 
     public static void backup() {
