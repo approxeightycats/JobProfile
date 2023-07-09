@@ -6,7 +6,6 @@ import com.model.Job;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Locale;
 
 /**
  * temporary stand-in for what will be used to interact with whatever db
@@ -38,6 +37,7 @@ public class DBController {
             System.out.println("Connection to DB has been established.");
         }
         catch (SQLException e) {
+            System.out.println("Connection failed");
             System.out.println(e.getMessage());
         }
         return c;
@@ -149,20 +149,32 @@ public class DBController {
         }
     }
 
-    public static void setClientData(String field, String val, String id) {
-        String sql = "UPDATE CLIENTS SET (?) = (?) WHERE CLIENT_ID = (?)";
+    public static void setClientData(String[] vals, String id) {
+        String sql = "UPDATE CLIENTS SET " +
+                "FIRST_NAME = (?), " +
+                "LAST_NAME = (?), " +
+                "TITLE = (?), " +
+                "EMAIL = (?), " +
+                "PHONE = (?), " +
+                "ADDRESS = (?), " +
+                "ORGANIZATION = (?) " +
+                "WHERE CLIENT_ID = (?)";
         try (Connection conn = connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, field.toUpperCase());
-            ps.setString(2, val);
-            ps.setString(3, id);
+            ps.setString(1, vals[0]);
+            ps.setString(2, vals[1]);
+            ps.setString(3, vals[2]);
+            ps.setString(4, vals[3]);
+            ps.setString(5, vals[4]);
+            ps.setString(6, vals[5]);
+            ps.setString(7, vals[6]);
+            ps.setString(8, id);
             ps.executeUpdate();
         }
         catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
-
 
     public static void addEquipment(Equipment equipment) {
         String sql = "INSERT INTO EQUIPMENT(DEPARTMENT, ITEM, \"REPLACEMENT COST\", \"DATE OF SERVICE \") VALUES (?, ?, ?, ?)";

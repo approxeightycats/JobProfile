@@ -124,14 +124,20 @@ public class AddClientStage {
         cancelButton.setOnAction(e -> closeStage());
         submitButton.setOnAction(e -> {
             Client c = createClient();
-            String cid = DBController.getClientID(c.getFirstName(), c.getLastName());
             if (checkValidInput()) {
                 DBController.addClientName(c);
-                DBController.setClientData("title", c.getTitle(), cid);
-                DBController.setClientData("email", c.getEmail(), cid);
-                DBController.setClientData("phone", c.getPhone(), cid);
-                DBController.setClientData("address", c.getAddress(), cid);
-                DBController.setClientData("organization", c.getOrg(), cid);
+                String cid = DBController.getClientID(c.getFirstName(), c.getLastName());
+                String[] vals = {
+                        c.getFirstName(),
+                        c.getLastName(),
+                        c.getTitle(),
+                        c.getEmail(),
+                        c.getPhone(),
+                        c.getAddress(),
+                        c.getOrg()
+                };
+                System.out.println(cid);
+                DBController.setClientData(vals, cid);
                 tiedPane.addClient(c);
             }
         });

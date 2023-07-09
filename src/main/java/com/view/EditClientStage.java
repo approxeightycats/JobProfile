@@ -4,7 +4,6 @@ import com.controller.DBController;
 import com.model.Client;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,8 +12,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
 
 public class EditClientStage {
 
@@ -123,20 +120,20 @@ public class EditClientStage {
     }
 
     private void update(String clientID) {
-        if (!firstName.getText().equals(client.getFirstName()))
-            DBController.setClientData("FIRST_NAME", firstName.getText(), clientID);
-        if (!lastName.getText().equals(client.getLastName()))
-            DBController.setClientData("LAST_NAME", lastName.getText(), clientID);
-        if (!title.getText().equals(client.getTitle()))
-            DBController.setClientData("TITLE", title.getText(), clientID);
-        if (!organization.getText().equals(client.getOrg()))
-            DBController.setClientData("ORGANIZATION", organization.getText(), clientID);
-        if (!emailAddress.getText().equals(client.getEmail()))
-            DBController.setClientData("EMAIL", emailAddress.getText(), clientID);
-        if (!phone.getText().equals(client.getPhone()))
-            DBController.setClientData("PHONE", phone.getText(), clientID);
-//        if (!contactPrimary.getText().equals(client.getPrimaryContact()))
-//            DBController.setClientData("", placeholder.getText(), clientID);
+
+        String[] vals = {
+                client.getFirstName(),
+                client.getLastName(),
+                client.getTitle(),
+                client.getEmail(),
+                client.getPhone(),
+                client.getAddress(),
+                client.getOrg(),
+                clientID
+        };
+
+        DBController.setClientData(vals, clientID);
+
     }
 
 }
