@@ -18,36 +18,19 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.lang.reflect.Array;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Stream;
 
 public class JobProfileApplication extends Application {
 
-    private boolean testingBoolToggle;
     private Pane root;
     private StackPane mainStackPane;
     private ArrayList<BorderPane> borderPanes;
     private ArrayList<Button> menuButtons;
+    private Boolean menuToggle;
     private BorderPane activePane;
-    private VBox exportCalVBox;
-    private VBox viewJobsVBox;
-    private VBox adminVBox;
-    private ObservableList<String> upcoming;
-    private VBox actions;
-    private Button createInvoice;
-    private Button newJob;
-    private Button exportCal;
-    private Button viewJobs;
-    private Button admin;
-    private TextField jobName;
-    private DatePicker startDate;
-    private TextField startTime;
-    private Scene mainPage;
-    private ScreenController screenController;
     private Stage equipmentStage;
     private ObservableList<String> currentJobEquipment;
     private ViewClientsPane viewClientsPane;
@@ -91,15 +74,30 @@ public class JobProfileApplication extends Application {
         BorderPane jobCreateBorderPane = new BorderPane();
         BorderPane summaryBorderPane = new BorderPane();
         BorderPane invoiceBorderPane = new BorderPane();
+
+        viewClientsPane = new ViewClientsPane(root);
+        viewClientsPane.back.setOnAction(e -> swapActiveBorderPane("mainPage"));
+
+        BorderPane clientListBorderPane = viewClientsPane.getViewClientsPane();
+        BorderPane equipmentListBorderPane = new BorderPane();
+        BorderPane jobListBorderPane = new BorderPane();
+        BorderPane calendarPane = new BorderPane();
+
         mainBorderPane.setId("mainPage");
         jobCreateBorderPane.setId("jobCreatePage");
         summaryBorderPane.setId("jobSummaryPage");
         invoiceBorderPane.setId("invoicePage");
+
+        clientListBorderPane.setId("clientListPage");
+        equipmentListBorderPane.setId("equipmentListPage");
+        jobListBorderPane.setId("jobListPage");
+        calendarPane.setId("calendarPage");
+
         borderPanes = new ArrayList<>(Arrays.asList(
-                mainBorderPane,
-                jobCreateBorderPane,
-                summaryBorderPane,
-                invoiceBorderPane));
+                mainBorderPane, jobCreateBorderPane,
+                summaryBorderPane, invoiceBorderPane,
+                clientListBorderPane, equipmentListBorderPane,
+                jobListBorderPane, calendarPane));
         for (BorderPane b : borderPanes) {
             b.setPadding(new Insets(25, 25, 25, 25));
             b.setVisible(false);
@@ -169,34 +167,50 @@ public class JobProfileApplication extends Application {
     }
 
     private void initMenu() {
+        HBox container = new HBox();
         VBox menu = new VBox();
         menu.setId("menu");
         menu.prefHeightProperty().bind(root.heightProperty());
-        menu.setPrefWidth(150);
+        container.setPrefWidth(180);
 
-        initMenuButtons();
+        Button toggle = new Button("<");
+        initMenuButtons(menu);
         menu.getChildren().addAll(menuButtons);
+        toggle.setAlignment(Pos.TOP_CENTER);
+        toggle.setStyle(
+                "-fx-pref-width: 30;" +
+                "-fx-pref-height: 30;" +
+                "-fx-background-color: #c9c9c9;" +
+                "-fx-background-radius: 0;"
+        );
 
-        menu.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
-        menu.setTranslateX(-140);
-        TranslateTransition menuTranslation = new TranslateTransition(Duration.millis(500), menu);
+        container.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
 
-        menuTranslation.setFromX(-140);
-        menuTranslation.setToX(0);
+        container.layoutXProperty().bind(root.widthProperty().subtract(30));
+        TranslateTransition menuTranslation = new TranslateTransition(Duration.millis(500), container);
 
-        menu.setOnMouseEntered(evt -> {
-            menuTranslation.setRate(1);
-            menuTranslation.play();
+        menuTranslation.setFromX(root.widthProperty().doubleValue());
+        menuTranslation.setToX(root.widthProperty().doubleValue() - 150);
+
+        menuToggle = true;
+        toggle.setOnAction(evt -> {
+            if (menuToggle) {
+                toggle.setText(">");
+                menuTranslation.setRate(1);
+                menuTranslation.play();
+            } else {
+                toggle.setText("<");
+                menuTranslation.setRate(-1);
+                menuTranslation.play();
+            }
+            menuToggle = !menuToggle;
         });
-        menu.setOnMouseExited(evt -> {
-            menuTranslation.setRate(-1);
-            menuTranslation.play();
-        });
 
-        root.getChildren().add(menu);
+        container.getChildren().addAll(toggle, menu);
+        root.getChildren().add(container);
     }
 
-    private void initMenuButtons() {
+    private void initMenuButtons(VBox menu) {
         Button newJobBtn = new Button("New Job");
         Button openJobBtn = new Button("Open Job");
         Button clientListBtn = new Button("Client List");
@@ -207,10 +221,10 @@ public class JobProfileApplication extends Application {
 
         newJobBtn.setId("jobCreatePageBtn");
         openJobBtn.setId("jobOpenPageBtn");
-        clientListBtn.setId("mainPageBtn");
-        equipmentBtn.setId("mainPageBtn");
-        jobListBtn.setId("mainPageBtn");
-        calendarBtn.setId("mainPageBtn");
+        clientListBtn.setId("clientListPageBtn");
+        equipmentBtn.setId("equipmentListPageBtn");
+        jobListBtn.setId("jobListPageBtn");
+        calendarBtn.setId("calendarPageBtn");
         mainBtn.setId("mainPageBtn");
 
         menuButtons = new ArrayList<>(Arrays.asList(
@@ -242,15 +256,6 @@ public class JobProfileApplication extends Application {
             }
         }
         activePane = newActivePane;
-    }
-
-
-    private void initOtherScenes() {
-        initInvoiceScene();
-        initJobScene();
-        initCalExportScene();
-        initJobViewScene();
-        initAdminScene();
     }
 
     private void initInvoiceScene() {
@@ -368,166 +373,6 @@ public class JobProfileApplication extends Application {
         Scene equipmentStageScene = new Scene(addEquipmentVBox, 400, 650);
         equipmentStage.setScene(equipmentStageScene);
         equipmentStage.show();
-    }
-
-    private void initCalExportScene() {
-        exportCalVBox = new VBox();
-
-        Button back = new Button("Back");
-        back.setOnAction(e -> screenController.activate("main"));
-
-        exportCalVBox.getChildren().addAll(back);
-    }
-
-    private void initJobViewScene() {
-        viewJobsVBox = new VBox();
-
-        Button back = new Button("Back");
-        back.setOnAction(e -> screenController.activate("main"));
-
-        viewJobsVBox.getChildren().addAll(back);
-    }
-
-    private void initAdminScene() {
-        adminVBox = new VBox();
-        adminVBox.setPadding(new Insets(25, 25, 25, 25));
-        adminVBox.setSpacing(10);
-        adminVBox.setAlignment(Pos.CENTER);
-
-        Button viewEquipment = new Button("View equipment");
-        Button newEquipment = new Button("Add new equipment");
-        Button viewClients = new Button("View & add clients");
-        Button back = new Button("Back");
-
-        viewEquipment.setOnAction(e -> {
-
-        });
-        newEquipment.setOnAction(e -> {
-
-        });
-        viewClients.setOnAction(e -> screenController.activate("view clients"));
-        back.setOnAction(e -> screenController.activate("main"));
-
-        adminVBox.getChildren().addAll(new Label("Administration"), viewEquipment, newEquipment, viewClients, back);
-    }
-
-    private void initButtons() {
-        createInvoice = new Button("Create Invoice");
-        newJob = new Button("New Job");
-        exportCal = new Button("Export Calendar");
-        viewJobs = new Button("View Jobs");
-        admin = new Button("Administration");
-
-        createInvoice.setMinWidth(actions.getPrefWidth());
-        newJob.setMinWidth(actions.getPrefWidth());
-        exportCal.setMinWidth(actions.getPrefWidth());
-        viewJobs.setMinWidth(actions.getPrefWidth());
-        admin.setMinWidth(actions.getPrefWidth());
-
-        initButtonHandler();
-    }
-
-    private void initButtonHandler() {
-        createInvoice.setOnAction(e -> screenController.activate("invoice"));
-        newJob.setOnAction(e -> {
-//            String job = initChoiceDialog();
-            screenController.activate("job");
-        });
-        exportCal.setOnAction(e -> screenController.activate("export"));
-        viewJobs.setOnAction(e -> {
-            //screenController.activate("viewJobs");
-            Alert a = new Alert(Alert.AlertType.INFORMATION);
-            a.setHeaderText("do stuff!!!");
-            a.setContentText("this will probably open a calendar in another window");
-            a.show();
-
-        });
-        admin.setOnAction(e -> screenController.activate("admin"));
-    }
-
-    private VBox jobTypeSelector() {
-        VBox list = new VBox(10);
-
-        Button mainScreen = new Button("Main");
-        Button videoOptions = new Button("Video");
-        Button photoOptions = new Button("Photos");
-        Button audioOptions = new Button("Sound");
-
-        mainScreen.setOnAction(e -> screenController.activate("job"));
-        videoOptions.setOnAction(e -> screenController.activate("video"));
-        photoOptions.setOnAction(e -> screenController.activate("photo"));
-        audioOptions.setOnAction(e -> screenController.activate("audio"));
-
-        list.getChildren().addAll(mainScreen, videoOptions, photoOptions, audioOptions);
-        list.setAlignment(Pos.CENTER_LEFT);
-        list.setPrefWidth(100);
-        mainScreen.setMinWidth(list.getPrefWidth());
-        videoOptions.setMinWidth(list.getPrefWidth());
-        photoOptions.setMinWidth(list.getPrefWidth());
-        audioOptions.setMinWidth(list.getPrefWidth());
-
-        return list;
-    }
-
-    private HBox bottom() {
-        HBox buttons = new HBox(10);
-        buttons.setPrefWidth(150);
-        buttons.setAlignment(Pos.CENTER);
-        buttons.setPadding(new Insets(25, 25, 0, 25));
-
-        Button save = new Button("Save and add job");
-        Button addEquipment = new Button("Add equipment");
-        Button back = new Button("Back");
-        save.setMinWidth(buttons.getPrefWidth());
-        addEquipment.setMinWidth(buttons.getPrefWidth());
-        back.setMinWidth(buttons.getPrefWidth());
-
-        buttons.getChildren().addAll(save, addEquipment, back);
-
-        save.setOnAction(e -> screenController.activate("main"));
-        addEquipment.setOnAction(e -> {
-            if (equipmentStage == null) {
-                addEquipmentStage();
-            }
-        });
-        back.setOnAction(e -> {
-            jobName.clear();
-            startDate.setValue(LocalDate.now());
-            startTime.clear();
-            if (equipmentStage != null) {
-                equipmentStage.close();
-                equipmentStage = null;
-            }
-            screenController.activate("main");
-        });
-
-        return buttons;
-    }
-
-    private VBox equipmentView() {
-        VBox equipmentListBox = new VBox(10);
-
-        Label title = new Label("Current equipment:");
-        ListView<String> equipmentList = new ListView<>(currentJobEquipment);
-
-        equipmentListBox.getChildren().addAll(title, equipmentList);
-        equipmentListBox.setAlignment(Pos.CENTER);
-
-        return equipmentListBox;
-    }
-
-    private String initChoiceDialog() {
-        List<String> choices = new ArrayList<>();
-        choices.add("Video production");
-        choices.add("Audio production");
-        choices.add("Still photography");
-
-        ChoiceDialog<String> choice = new ChoiceDialog<>("Select", choices);
-        choice.setHeaderText("Select job type");
-        choice.setContentText("Job:");
-
-        Optional<String> result = choice.showAndWait();
-        return result.orElse("invalid");
     }
 
     public static class Item {

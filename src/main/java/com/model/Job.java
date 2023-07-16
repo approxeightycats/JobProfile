@@ -1,71 +1,32 @@
 package com.model;
 
 import com.controller.DBController;
+import javafx.beans.property.StringProperty;
 
 /**
  * Contains technical data for a given job.
  */
 public class Job {
 
-    private final int jobID;
-    private final String clientID;
-    private String name;
-    private int estProjectLength;
-    private int estCost;
-    private int estProductionTime;
-    private String status;
+    private StringProperty jobNumber;
+    private StringProperty jobName;
+    private StringProperty clientName;
+    private StringProperty clientId;
+    private StringProperty contact;
+    private StringProperty jobTypes;
+    private StringProperty description;
+    private StringProperty dates; //placeholder
+    private StringProperty estimate;
+    private StringProperty notes;
+    private StringProperty destinations;
+    private StringProperty outputFormats;
+    private StringProperty aspectRatio;
+    private StringProperty systemFreq;
+    private StringProperty resolution;
+    private StringProperty fps;
+    private StringProperty location;
+    private StringProperty cameras;
 
-    public Job(String clientID) {
-        jobID = DBController.getOpenJobID();
-        this.clientID = clientID;
-    }
 
-    public int getJobID() {
-        return jobID;
-    }
-
-    public String getClientID() {
-        return clientID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getEstProjectLength() {
-        return estProjectLength;
-    }
-
-    public void setEstProjectLength(int estProjectLength) {
-        this.estProjectLength = estProjectLength;
-    }
-
-    public int getEstCost() {
-        return estCost;
-    }
-
-    public void setEstCost(int estCost) {
-        this.estCost = estCost;
-    }
-
-    public int getEstProductionTime() {
-        return estProductionTime;
-    }
-
-    public void setEstProductionTime(int estProductionTime) {
-        this.estProductionTime = estProductionTime;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status ) {
-        this.status = status;
-    }
 
 }

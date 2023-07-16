@@ -11,11 +11,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 
 import java.util.ArrayList;
@@ -24,23 +26,18 @@ public class ViewClientsPane {
 
     private final BorderPane viewClientsPane;
     private ObservableList<Client> clients;
-    private final ScreenController screenController;
     private TableView<Client> tableView;
-    private Button back;
+    protected final Button back;
 
-    ViewClientsPane(Scene scene) {
+    ViewClientsPane(Pane root) {
 
         viewClientsPane = new BorderPane();
         viewClientsPane.setPadding(new Insets(25, 25, 25, 25));
 
-        setupTable();
-
-        screenController = ScreenController.getInstance(scene);
+        setupTable(root);
 
         back = new Button("Back");
-        back.setOnAction(e -> {
-            screenController.activate("admin");
-        });
+
         Button newClient = new Button("Add new client");
         newClient.setOnAction(e -> {
             AddClientStage cStage = new AddClientStage(this);
@@ -50,8 +47,11 @@ public class ViewClientsPane {
 
         HBox buttons = new HBox(10);
         buttons.getChildren().addAll(back, newClient);
+        buttons.setPadding(new Insets(25, 25, 25, 25));
+        buttons.setAlignment(Pos.CENTER);
 
         viewClientsPane.setCenter(tableView);
+        BorderPane.setAlignment(tableView, Pos.CENTER);
         viewClientsPane.setBottom(buttons);
 
     }
@@ -62,10 +62,11 @@ public class ViewClientsPane {
         tableView.refresh();
     }
 
-    private void setupTable() {
+    private void setupTable(Pane root) {
         tableView = new TableView<>();
         clients = FXCollections.observableArrayList(DBController.getAllClients());
         tableView.setItems(clients);
+        tableView.prefWidthProperty().bind(root.widthProperty().subtract(60));
 
         TableColumn<Client, String> clientIDCol = new TableColumn<>("Client ID");
         clientIDCol.setCellValueFactory(new PropertyValueFactory<>("clientID"));

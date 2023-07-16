@@ -1,14 +1,19 @@
 #menu {
-    -fx-background-color: #88F;
-    -fx-spacing: 5;
+    -fx-background-color: transparent;
+    -fx-spacing: 0;
 }
 
 #menu .button {
     -fx-pref-height: 30;
-    -fx-pref-width: 200;
-    -fx-background-color: #66F;
+    -fx-pref-width: 150;
+    -fx-background-color: #e7e7e7;
+    -fx-background-radius: 0;
+}
+
+#toggle_button {
+    -fx-background-color: #e7e7e7;
 }
 
 #menu .button:hover {
-    -fx-background-color: #F6F;
+    -fx-background-color: #3399ff;
 }

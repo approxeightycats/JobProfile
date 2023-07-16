@@ -43,19 +43,19 @@ public class DBController {
         return c;
     }
 
-    public void addJob(Job job) {
-        String sql = "INSERT INTO JOBS(JOBID, CLIENT, NAME) VALUES (?, ?, ?)";
-        try (Connection conn = connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setInt(1, job.getJobID());
-                ps.setString(2, job.getClientID());
-                ps.setString(3, job.getName());
-                ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
+//    public void addJob(Job job) {
+//        String sql = "INSERT INTO JOBS(JOBID, CLIENT, NAME) VALUES (?, ?, ?)";
+//        try (Connection conn = connect();
+//             PreparedStatement ps = conn.prepareStatement(sql)) {
+//                ps.setInt(1, job.getJobID());
+//                ps.setString(2, job.getClientID());
+//                ps.setString(3, job.getName());
+//                ps.executeUpdate();
+//        }
+//        catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//        }
+//    }
 
     public static void addClientName(Client client) {
         String sql = "INSERT INTO CLIENTS (FIRST_NAME, LAST_NAME) VALUES (?, ?)";
