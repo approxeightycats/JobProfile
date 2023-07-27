@@ -13,7 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class EditClientStage {
+public class ClientEditStage {
 
     private Stage editClientStage;
     private final BorderPane editClientPane;
@@ -29,10 +29,10 @@ public class EditClientStage {
     private TextField phone;
     private TextField physicalAddress;
     private TextField contactPrimary;
-    private ViewClientsPane tiedPane;
+    private ClientViewPane tiedPane;
     private Client client;
 
-    EditClientStage(ViewClientsPane tiedPane, Client client) {
+    ClientEditStage(ClientViewPane tiedPane, Client client) {
         editClientStage = new Stage();
         this.tiedPane = tiedPane;
         this.client = client;
@@ -115,7 +115,7 @@ public class EditClientStage {
         submitButton.setOnAction(e -> {
             String clientID = client.getClientID();
             update(clientID);
-            tiedPane.updateClientView(client);
+            tiedPane.refreshTable();
         });
     }
 

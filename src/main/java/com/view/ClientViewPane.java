@@ -1,35 +1,26 @@
 package com.view;
 
 import com.controller.DBController;
-import com.controller.ScreenController;
 import com.model.Client;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.util.Callback;
 
-import java.util.ArrayList;
-
-public class ViewClientsPane {
+public class ClientViewPane {
 
     private final BorderPane viewClientsPane;
     private ObservableList<Client> clients;
     private TableView<Client> tableView;
     protected final Button back;
 
-    ViewClientsPane(Pane root) {
+    ClientViewPane(Pane root) {
 
         viewClientsPane = new BorderPane();
         viewClientsPane.setPadding(new Insets(25, 25, 25, 25));
@@ -40,9 +31,9 @@ public class ViewClientsPane {
 
         Button newClient = new Button("Add new client");
         newClient.setOnAction(e -> {
-            AddClientStage cStage = new AddClientStage(this);
-            cStage.showStage();
-            back.addEventHandler(ActionEvent.ACTION, event -> cStage.closeStage());
+            ClientAddStage cStage = new ClientAddStage(this);
+            cStage.show();
+            back.addEventHandler(ActionEvent.ACTION, event -> cStage.close());
         });
 
         HBox buttons = new HBox(10);
@@ -59,7 +50,7 @@ public class ViewClientsPane {
     protected void addClient(Client client) {
         client.setClientID(DBController.getClientID(client.getFirstName(), client.getLastName()));
         clients.add(client);
-        tableView.refresh();
+        refreshTable();
     }
 
     private void setupTable(Pane root) {
@@ -69,65 +60,72 @@ public class ViewClientsPane {
         tableView.prefWidthProperty().bind(root.widthProperty().subtract(60));
 
         TableColumn<Client, String> clientIDCol = new TableColumn<>("Client ID");
-        clientIDCol.setCellValueFactory(new PropertyValueFactory<>("clientID"));
+        clientIDCol.setCellValueFactory(f -> f.getValue().clientIDProperty());
+        clientIDCol.setCellFactory(c -> new TableCell<>() {
+            @Override
+            protected void updateItem(String val, boolean empty) {
+                super.updateItem(val, empty);
+                if (val == null || empty) {
+                    setText(null);
+                }
+                else {
+                    setText("C" + ("000000" + val).substring(val.length()) );
+                }
+            }
+        });
         TableColumn<Client, String> lastNameCol = new TableColumn<>("Last Name");
-        lastNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        lastNameCol.setCellValueFactory(f -> f.getValue().lastNameProperty());
         TableColumn<Client, String> firstNameCol = new TableColumn<>("First Name");
-        firstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        firstNameCol.setCellValueFactory(f -> f.getValue().firstNameProperty());
         TableColumn<Client, String> orgNameCol = new TableColumn<>("Organization");
-        orgNameCol.setCellValueFactory(new PropertyValueFactory<>("org"));
+        orgNameCol.setCellValueFactory(f -> f.getValue().orgProperty());
         TableColumn<Client, String> titleCol = new TableColumn<>("Title");
-        titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+        titleCol.setCellValueFactory(f -> f.getValue().titleProperty());
         TableColumn<Client, String> emailCol = new TableColumn<>("Email");
-        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+        emailCol.setCellValueFactory(f -> f.getValue().emailProperty());
         TableColumn<Client, String> phoneCol = new TableColumn<>("Primary phone");
-        phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
+        phoneCol.setCellValueFactory(f -> f.getValue().phoneProperty());
         TableColumn<Client, String> addressCol = new TableColumn<>("Address");
-        addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+        addressCol.setCellValueFactory(f -> f.getValue().addressProperty());
 
         tableView.getColumns().setAll(clientIDCol, lastNameCol, firstNameCol, orgNameCol, titleCol, emailCol, phoneCol, addressCol);
 
         tableView.setRowFactory(
-                new Callback<TableView<Client>, TableRow<Client>>() {
-                    public TableRow<Client> call(TableView<Client> tableView) {
-                        final TableRow<Client> row = new TableRow<>();
-                        final ContextMenu rowMenu = new ContextMenu();
-                        MenuItem editItem = new MenuItem("Edit");
-                        editItem.setOnAction(e -> {
-                            System.out.println("edit selected");
-                            editClient(tableView.getSelectionModel().getSelectedItem());
-                        });
-                        MenuItem removeItem = new MenuItem("Delete");
-                        removeItem.setOnAction(e -> {
-                            System.out.println("delete selected");
-                            deleteClient(tableView.getSelectionModel().getSelectedItem());
-                        });
-                        rowMenu.getItems().addAll(editItem, removeItem);
+                tableView -> {
+                    final TableRow<Client> row = new TableRow<>();
+                    final ContextMenu rowMenu = new ContextMenu();
+                    MenuItem editItem = new MenuItem("Edit");
+                    editItem.setOnAction(e -> {
+                        System.out.println("edit selected");
+                        editClient(tableView.getSelectionModel().getSelectedItem());
+                    });
+                    MenuItem removeItem = new MenuItem("Delete");
+                    removeItem.setOnAction(e -> {
+                        System.out.println("delete selected");
+                        deleteClient(tableView.getSelectionModel().getSelectedItem());
+                    });
+                    rowMenu.getItems().addAll(editItem, removeItem);
 
-                        // only display context menu for non-empty rows:
-                        row.contextMenuProperty().bind(
-                                Bindings.when(row.emptyProperty())
-                                        .then((ContextMenu) null)
-                                        .otherwise(rowMenu));
-                        return row;
-                    }
+                    // only display context menu for non-empty rows:
+                    row.contextMenuProperty().bind(
+                            Bindings.when(row.emptyProperty())
+                                    .then((ContextMenu) null)
+                                    .otherwise(rowMenu));
+                    return row;
                 });
     }
 
     private void editClient(Client client) {
-        EditClientStage editClientStage = new EditClientStage(this, client);
-        editClientStage.showStage();
-        back.addEventHandler(ActionEvent.ACTION, event -> editClientStage.closeStage());
+        ClientEditStage clientEditStage = new ClientEditStage(this, client);
+        clientEditStage.showStage();
+        back.addEventHandler(ActionEvent.ACTION, event -> clientEditStage.closeStage());
     }
 
-    protected void updateClientView(Client client) {
-        for (Client c : clients) {
-            if (c.getClientID().equals(client.getClientID())) {
-                clients.set(clients.indexOf(c), client);
-                tableView.refresh();
-                return;
-            }
-        }
+    protected void refreshTable() {
+        clients.clear();
+        clients = FXCollections.observableArrayList(DBController.getAllClients());
+        tableView.setItems(clients);
+        tableView.refresh();
     }
 
     private void deleteClient(Client client) {

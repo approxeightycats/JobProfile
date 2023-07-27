@@ -43,19 +43,18 @@ public class DBController {
         return c;
     }
 
-//    public void addJob(Job job) {
-//        String sql = "INSERT INTO JOBS(JOBID, CLIENT, NAME) VALUES (?, ?, ?)";
-//        try (Connection conn = connect();
-//             PreparedStatement ps = conn.prepareStatement(sql)) {
-//                ps.setInt(1, job.getJobID());
-//                ps.setString(2, job.getClientID());
-//                ps.setString(3, job.getName());
-//                ps.executeUpdate();
-//        }
-//        catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//        }
-//    }
+    public void addJob(Job job) {
+        String sql = "INSERT INTO JOBS(NAME, CLIENT_ID) VALUES (?, ?)";
+        try (Connection conn = connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, job.getJobName());
+            ps.setString(2, job.getClientId());
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
     public static void addClientName(Client client) {
         String sql = "INSERT INTO CLIENTS (FIRST_NAME, LAST_NAME) VALUES (?, ?)";
@@ -68,6 +67,61 @@ public class DBController {
         catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public static void addClient(Client client) {
+        String sql = "INSERT INTO CLIENTS (" +
+                "FIRST_NAME, LAST_NAME, TITLE, EMAIL, PHONE, ADDRESS, ORGANIZATION) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, client.getFirstName());
+            ps.setString(2, client.getLastName());
+            ps.setString(3, client.getTitle());
+            ps.setString(4, client.getEmail());
+            ps.setString(5, client.getPhone());
+            ps.setString(6, client.getAddress());
+            ps.setString(7, client.getOrg());
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void addEquipment(Equipment equipment) {
+        String sql = "INSERT INTO EQUIPMENT (" +
+                "ITEM, DEPARTMENT, REPLACEMENT_COST, DATE_OF_SERVICE, SERIAL, STATUS, RENTAL_RATE) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, equipment.getItem());
+            ps.setString(2, equipment.getDepartment());
+            ps.setInt(3, equipment.getReplacementCost());
+            ps.setString(4, equipment.getDateOfService());
+            ps.setString(5, equipment.getSerial());
+            ps.setString(6, equipment.getStatus());
+            ps.setInt(7, equipment.getRentalCost());
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void editEquipment(String field, String value, String serial) {
+        String sql = "UPDATE EQUIPMENT SET (?) = (?) WHERE SERIAL = (?)";
+        try (Connection conn = connect();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, field);
+            ps.setString(2, value);
+            ps.setString(3, serial);
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     public static ArrayList<Client> getAllClients() {
@@ -94,6 +148,48 @@ public class DBController {
         return clients;
     }
 
+    public static ArrayList<Job> getAllJobs() {
+        ArrayList<Job> jobs = new ArrayList<>();
+        String sql = "SELECT * FROM JOBS";
+        try (Connection conn = connect();
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Job j = new Job();
+                j.setJobName(rs.getString("NAME"));
+                j.setClientId(rs.getString("CLIENT_ID"));
+                j.setJobId(rs.getString("JOB_ID"));
+                jobs.add(j);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return jobs;
+    }
+
+    public static ArrayList<Equipment> getAllEquipment() {
+        ArrayList<Equipment> equipment = new ArrayList<>();
+        String sql = "SELECT * FROM EQUIPMENT";
+        try (Connection conn = connect();
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Equipment e = new Equipment();
+                e.setItem(rs.getString("ITEM"));
+                e.setSerial(rs.getString("SERIAL"));
+                e.setDepartment(rs.getString("DEPARTMENT"));
+                e.setReplacementCost(rs.getInt("REPLACEMENT_COST"));
+                e.setDateOfService(rs.getString("DATE_OF_SERVICE"));
+                e.setStatus(rs.getString("STATUS"));
+                e.setRentalCost(rs.getInt("RENTAL_RATE"));
+                equipment.add(e);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return equipment;
+    }
+
     public static String getClientID(String first, String last) {
         String sql = "SELECT CLIENT_ID FROM CLIENTS WHERE FIRST_NAME = (?) AND LAST_NAME = (?)";
         try (Connection conn = connect();
@@ -101,8 +197,7 @@ public class DBController {
             ps.setString(1, first);
             ps.setString(2, last);
             ResultSet rs = ps.executeQuery();
-            String s = rs.getString("CLIENT_ID");
-            return s;
+            return rs.getString("CLIENT_ID");
         }
         catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -176,21 +271,6 @@ public class DBController {
         }
     }
 
-    public static void addEquipment(Equipment equipment) {
-        String sql = "INSERT INTO EQUIPMENT(DEPARTMENT, ITEM, \"REPLACEMENT COST\", \"DATE OF SERVICE \") VALUES (?, ?, ?, ?)";
-        try (Connection conn = connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, equipment.getDepartment());
-            ps.setString(2, equipment.getName());
-            ps.setInt(4, equipment.getReplacementCost());
-            ps.setString(3, equipment.getDateOfService());
-            ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     public void editJobStatus(int jobID, String status) {
         String sql = "UPDATE JOBS SET STATUS = (?) WHERE JOBID = (?)";
         try (Connection conn = connect();
@@ -215,34 +295,17 @@ public class DBController {
         }
     }
 
-    public void removeEquipment(String name) {
-        String sql = "DELETE FROM EQUIPMENT WHERE ITEM = (?)";
+    public static void removeEquipment(String serial) {
+        String sql = "DELETE FROM EQUIPMENT WHERE SERIAL = (?)";
         try (Connection conn = connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, name);
+            ps.setString(1, serial);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public static int getOpenJobID() {
-        int someID = 0;
-        String sql = "SELECT JOBID FROM JOBS";
-        try (Connection conn = connect();
-             Statement stmt  = conn.createStatement();
-             ResultSet rs    = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                int v = Integer.parseInt(rs.getString("JOBID"));
-                someID = Math.max(v, someID);
-            }
-        }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-
-        return someID + 1;
-    }
 
     public static void backup() {
 

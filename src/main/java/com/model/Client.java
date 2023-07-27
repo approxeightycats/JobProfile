@@ -17,7 +17,7 @@ public class Client {
     private StringProperty phone;
     private StringProperty address;
 
-    private StringProperty clientIDProperty() {
+    public StringProperty clientIDProperty() {
         if (clientID == null) {
             clientID = new SimpleStringProperty(this, "clientID");
         }

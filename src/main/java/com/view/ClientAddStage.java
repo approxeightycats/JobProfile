@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
-public class AddClientStage {
+public class ClientAddStage {
 
     private Stage addClientStage;
     private final BorderPane addClientPane;
@@ -33,10 +33,11 @@ public class AddClientStage {
     private TextField phone;
     private TextField physicalAddress;
     private TextField contactPrimary;
-    private ViewClientsPane tiedPane;
+    private ClientViewPane tiedPane;
+    private ArrayList<TextField> text;
 
 
-    AddClientStage(ViewClientsPane tiedPane) {
+    ClientAddStage(ClientViewPane tiedPane) {
         addClientStage = new Stage();
         this.tiedPane = tiedPane;
 
@@ -46,20 +47,18 @@ public class AddClientStage {
         addClientPane.setPadding(new Insets(25, 25, 25, 25));
 
         initScene();
+        addClientStage.setScene(new Scene(addClientPane));
     }
 
-    protected void showStage() {
-        Scene scene = new Scene(addClientPane);
-        addClientStage.setScene(scene);
+    protected void show() {
         addClientStage.show();
     }
 
-    protected void closeStage() {
-        if (addClientStage != null) {
-            addClientStage.close();
-            addClientStage = null;
-            tiedPane = null;
+    protected void close() {
+        for (TextField t : text) {
+            t.clear();
         }
+        addClientStage.close();
     }
 
     private void initScene() {
@@ -111,7 +110,7 @@ public class AddClientStage {
         contactPrimary.setPromptText("Primary contact");
 
         input.getChildren().addAll(firstName, lastName, title, organization, emailAddress, phone, physicalAddress, contactPrimary);
-        ArrayList<TextField> text = new ArrayList<>();
+        text = new ArrayList<>();
         for (Node n : input.getChildren()) {
             text.add((TextField) n);
         }
@@ -121,24 +120,13 @@ public class AddClientStage {
     }
 
     private void initHandlers() {
-        cancelButton.setOnAction(e -> closeStage());
+        cancelButton.setOnAction(e -> close());
         submitButton.setOnAction(e -> {
             Client c = createClient();
             if (checkValidInput()) {
-                DBController.addClientName(c);
-                String cid = DBController.getClientID(c.getFirstName(), c.getLastName());
-                String[] vals = {
-                        c.getFirstName(),
-                        c.getLastName(),
-                        c.getTitle(),
-                        c.getEmail(),
-                        c.getPhone(),
-                        c.getAddress(),
-                        c.getOrg()
-                };
-                System.out.println(cid);
-                DBController.setClientData(vals, cid);
-                tiedPane.addClient(c);
+                DBController.addClient(c);
+                tiedPane.refreshTable();
+                close();
             }
         });
     }
