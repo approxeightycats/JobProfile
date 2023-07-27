@@ -7,11 +7,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class EquipmentViewPane {
@@ -85,16 +84,20 @@ public class EquipmentViewPane {
                     MenuItem editItem = new MenuItem("Edit");
                     editItem.setOnAction(e -> {
                         System.out.println("edit selected");
-//                        equipmentEditStage = new EquipmentEditStage(this,
-//                                tableView.getSelectionModel().getSelectedItem());
-//                        equipmentEditStage.show();
+                        equipmentEditStage = new EquipmentEditStage(this,
+                                tableView.getSelectionModel().getSelectedItem());
+                        equipmentEditStage.show();
                     });
                     MenuItem removeItem = new MenuItem("Delete");
                     removeItem.setOnAction(e -> {
                         System.out.println("delete selected");
                         deleteEquipment(tableView.getSelectionModel().getSelectedItem());
                     });
-                    rowMenu.getItems().addAll(editItem, removeItem);
+                    MenuItem editSerial = new MenuItem("Edit serial #");
+                    editSerial.setOnAction(e -> {
+                        editSerialStage(tableView.getSelectionModel().getSelectedItem());
+                    });
+                    rowMenu.getItems().addAll(editItem, editSerial, removeItem);
 
                     // only display context menu for non-empty rows:
                     row.contextMenuProperty().bind(
@@ -125,6 +128,34 @@ public class EquipmentViewPane {
 
     protected Stage getEquipmentAddNewStage() {
         return equipmentAddNewStage.getEquipmentAddNewStage();
+    }
+
+    private void editSerialStage(Equipment selected) {
+        Stage editSerialStage = new Stage();
+        editSerialStage.setMinHeight(100);
+        editSerialStage.setMinWidth(200);
+        BorderPane editSerialPane = new BorderPane();
+        editSerialPane.setPadding(new Insets(10, 10, 10, 10));
+        TextField serial = new TextField();
+        Label l = new Label("New serial: ");
+        Button b = new Button("Submit");
+        Button c = new Button("Cancel");
+        HBox entry = new HBox(10);
+        HBox btns = new HBox(10);
+        VBox all = new VBox(10);
+        entry.getChildren().addAll(l, serial);
+        btns.getChildren().addAll(c, b);
+        c.setOnAction(e -> editSerialStage.close());
+        b.setOnAction(e -> {
+            String ser = serial.getText();
+            DBController.editEquipmentSerial(ser, selected.getSerial());
+            refreshTable();
+            editSerialStage.close();
+        });
+        all.getChildren().addAll(entry, btns);
+        editSerialPane.setCenter(all);
+        editSerialStage.setScene(new Scene(editSerialPane));
+        editSerialStage.show();
     }
 
 }

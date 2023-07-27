@@ -42,6 +42,13 @@ public class JobViewPane {
         viewJobsPane.setBottom(buttons);
     }
 
+    protected void refreshTable() {
+        jobs.clear();
+        jobs = FXCollections.observableArrayList(DBController.getAllJobs());
+        tableView.setItems(jobs);
+        tableView.refresh();
+    }
+
     protected void addJob() {
 
     }
@@ -50,8 +57,9 @@ public class JobViewPane {
 
     }
 
-    private void deleteJob() {
-
+    private void deleteJob(Job job) {
+        DBController.removeJob(Integer.parseInt(job.getJobId()));
+        refreshTable();
     }
 
     private void setupTable(Pane root) {
@@ -96,7 +104,7 @@ public class JobViewPane {
                     MenuItem removeItem = new MenuItem("Delete");
                     removeItem.setOnAction(e -> {
                         System.out.println("delete selected");
-//                            deleteJob(tableView.getSelectionModel().getSelectedItem());
+                        deleteJob(tableView.getSelectionModel().getSelectedItem());
                     });
                     rowMenu.getItems().addAll(openItem, removeItem);
 

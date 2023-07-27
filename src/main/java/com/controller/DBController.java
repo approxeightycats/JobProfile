@@ -109,19 +109,94 @@ public class DBController {
         }
     }
 
-    public static void editEquipment(String field, String value, String serial) {
-        String sql = "UPDATE EQUIPMENT SET (?) = (?) WHERE SERIAL = (?)";
+    public static void editEquipmentItem(String value, String serial) {
+        String sql = "UPDATE EQUIPMENT SET ITEM = (?) WHERE SERIAL = (?)";
         try (Connection conn = connect();
             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, field);
-            ps.setString(2, value);
-            ps.setString(3, serial);
+            ps.setString(1, value);
+            ps.setString(2, serial);
             ps.executeUpdate();
         }
         catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
 
+    public static void editEquipmentDepartment(String value, String serial) {
+        String sql = "UPDATE EQUIPMENT SET DEPARTMENT = (?) WHERE SERIAL = (?)";
+        try (Connection conn = connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, value);
+            ps.setString(2, serial);
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void editEquipmentReplacementCost(String value, String serial) {
+        String sql = "UPDATE EQUIPMENT SET REPLACEMENT_COST = (?) WHERE SERIAL = (?)";
+        try (Connection conn = connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, value);
+            ps.setString(2, serial);
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void editEquipmentDoS(String value, String serial) {
+        String sql = "UPDATE EQUIPMENT SET DATE_OF_SERVICE = (?) WHERE SERIAL = (?)";
+        try (Connection conn = connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, value);
+            ps.setString(2, serial);
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public static void editEquipmentStatus(String value, String serial) {
+        String sql = "UPDATE EQUIPMENT SET STATUS = (?) WHERE SERIAL = (?)";
+        try (Connection conn = connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, value);
+            ps.setString(2, serial);
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void editEquipmentRentalRate(String value, String serial) {
+        String sql = "UPDATE EQUIPMENT SET RENTAL_RATE = (?) WHERE SERIAL = (?)";
+        try (Connection conn = connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, value);
+            ps.setString(2, serial);
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void editEquipmentSerial(String value, String serial) {
+        String sql = "UPDATE EQUIPMENT SET SERIAL = (?) WHERE SERIAL = (?)";
+        try (Connection conn = connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, value);
+            ps.setString(2, serial);
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public static ArrayList<Client> getAllClients() {
@@ -285,7 +360,7 @@ public class DBController {
     }
 
     public static void removeJob(int jobID) {
-        String sql = "DELETE FROM JOBS WHERE JOBID = (?)";
+        String sql = "DELETE FROM JOBS WHERE JOB_ID = (?)";
         try (Connection conn = connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, jobID);

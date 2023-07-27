@@ -104,22 +104,22 @@ public class EquipmentEditStage {
         String serial = oldValues.getSerial();
 
         if (!oldValues.getItem().equals(newValues.getItem())) {
-            DBController.editEquipment("ITEM", newValues.getItem(), serial);
+            DBController.editEquipmentItem(newValues.getItem(), serial);
         }
         if (!oldValues.getDepartment().equals(newValues.getDepartment())) {
-            DBController.editEquipment("DEPARTMENT", newValues.getDepartment(), serial);
+            DBController.editEquipmentDepartment(newValues.getDepartment(), serial);
         }
         if (!oldValues.getDateOfService().equals(newValues.getDateOfService())) {
-            DBController.editEquipment("DATE_OF_SERVICE", newValues.getDateOfService(), serial);
+            DBController.editEquipmentDoS(newValues.getDateOfService(), serial);
         }
         if (!oldValues.getStatus().equals(newValues.getStatus())) {
-            DBController.editEquipment("STATUS", newValues.getStatus(), serial);
+            DBController.editEquipmentStatus(newValues.getStatus(), serial);
         }
         if (!oldValues.getReplacementCost().equals(newValues.getReplacementCost())) {
-            DBController.editEquipment("REPLACEMENT_COST", parseInteger(newValues.getReplacementCost()), serial);
+            DBController.editEquipmentReplacementCost(parseInteger(newValues.getReplacementCost()), serial);
         }
         if (!oldValues.getRentalCost().equals(newValues.getRentalCost())) {
-            DBController.editEquipment("RENTAL_RATE", parseInteger(newValues.getRentalCost()), serial);
+            DBController.editEquipmentRentalRate(parseInteger(newValues.getRentalCost()), serial);
         }
 
     }
@@ -147,7 +147,7 @@ public class EquipmentEditStage {
     private Integer parseString(String val) {
         String[] split = val.split("\\.");
 
-        // splits a $x.xx into $x and xx, converts to pennies
+        // splits an $x.xx into $x and xx, converts to pennies
         int leftInt = Integer.parseInt(split[0]) * 100;
         int rightInt = 0;
         if (split.length > 1) {
