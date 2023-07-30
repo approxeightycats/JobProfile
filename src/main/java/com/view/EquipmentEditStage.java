@@ -23,24 +23,24 @@ public class EquipmentEditStage {
     private DatePicker dosPicker;
     private ComboBox<String> statusBox;
     private ComboBox<String> departmentBox;
-    private ArrayList<TextField> inputText;
+    private ArrayList<TextField> textInput;
     private Button cancel;
     private Button confirm;
-    private EquipmentViewPane tiedPane;
-    private Stage equipmentEditStage;
-    private Equipment originalEquipmentData;
+    private final EquipmentViewPane tiedPane;
+    private final Stage equipmentEditStage;
+    private final Equipment originalEquipmentData;
 
     protected EquipmentEditStage(EquipmentViewPane pane, Equipment equipment) {
         tiedPane = pane;
         originalEquipmentData = equipment;
         equipmentEditStage = new Stage();
-        equipmentEditStage.setMinWidth(250);
         equipmentEditStage.setMinHeight(400);
+        equipmentEditStage.setMinWidth(250);
         equipmentEditStage.setOnCloseRequest(e -> close());
 
         BorderPane editEquipmentPane = new BorderPane();
         editEquipmentPane.setPadding(new Insets(25, 25, 25, 25));
-        setupTextInput(editEquipmentPane, equipment);
+        initScene(editEquipmentPane, equipment);
 
         VBox topLabel = new VBox(5);
         topLabel.getChildren().addAll(
@@ -53,7 +53,7 @@ public class EquipmentEditStage {
         equipmentEditStage.setScene(new Scene(editEquipmentPane));
     }
 
-    private void setupTextInput(BorderPane bp, Equipment equipment) {
+    private void initScene(BorderPane bp, Equipment equipment) {
         GridPane stuff = new GridPane();
 
         Label itemLabel = new Label("Item:");
@@ -84,7 +84,7 @@ public class EquipmentEditStage {
         statusBox = new ComboBox<>(statusBoxOptions);
         statusBox.getSelectionModel().select(equipment.getStatus());
 
-        inputText = new ArrayList<>(Arrays.asList(
+        textInput = new ArrayList<>(Arrays.asList(
                 itemField, replacementPriceField, rentalPriceField));
 
         cancel = new Button("Cancel");
@@ -132,13 +132,13 @@ public class EquipmentEditStage {
     private Equipment getNewEquipmentData() {
         Equipment newEquipment = new Equipment();
 
-        newEquipment.setItem(inputText.get(0).getText());
+        newEquipment.setItem(textInput.get(0).getText());
         newEquipment.setDepartment(departmentBox.getValue());
         newEquipment.setDateOfService(
                 dosPicker.getValue().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
         newEquipment.setStatus(statusBox.getValue());
-        newEquipment.setReplacementCost(parseString(inputText.get(1).getText()));
-        newEquipment.setRentalCost(parseString(inputText.get(2).getText()));
+        newEquipment.setReplacementCost(parseString(textInput.get(1).getText()));
+        newEquipment.setRentalCost(parseString(textInput.get(2).getText()));
 
         return newEquipment;
     }

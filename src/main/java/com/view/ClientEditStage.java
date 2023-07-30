@@ -1,6 +1,5 @@
 package com.view;
 
-import com.controller.DBController;
 import com.model.Client;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,67 +8,80 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+
 public class ClientEditStage {
 
-    private Stage editClientStage;
-    private final BorderPane editClientPane;
+    private final Stage editClientStage;
     private VBox input;
     private HBox buttons;
     private Button cancelButton;
     private Button submitButton;
-    private TextField firstName;
-    private TextField lastName;
-    private TextField title;
-    private TextField organization;
-    private TextField emailAddress;
-    private TextField phone;
-    private TextField physicalAddress;
-    private TextField contactPrimary;
-    private ClientViewPane tiedPane;
-    private Client client;
+    ArrayList<TextField> textInput;
+    private final ClientViewPane tiedPane;
+    private final Client originalClientData;
 
-    ClientEditStage(ClientViewPane tiedPane, Client client) {
+    ClientEditStage(ClientViewPane pane, Client client) {
+        tiedPane = pane;
+        originalClientData = client;
         editClientStage = new Stage();
-        this.tiedPane = tiedPane;
-        this.client = client;
+        editClientStage.setMinHeight(800);
+        editClientStage.setMinWidth(300);
+        editClientStage.setOnCloseRequest(e -> close());
 
-        editClientStage.setMinHeight(430);
-        editClientStage.setMinWidth(250);
-        editClientPane = new BorderPane();
+        BorderPane editClientPane = new BorderPane();
         editClientPane.setPadding(new Insets(25, 25, 25, 25));
+        initScene(editClientPane, client);
 
-        initScene();
+        VBox topLabel = new VBox(5);
+        topLabel.getChildren().addAll(
+                new Label("Editing selected client."),
+                new Label("ID: " + client.getClientID()),
+                new Label("Name: " + client.getLastName() + ", " + client.getLastName())
+        );
+        editClientPane.setTop(topLabel);
+
+        editClientStage.setScene(new Scene(editClientPane));
     }
 
-    protected void showStage() {
-        Scene scene = new Scene(editClientPane);
-        editClientStage.setScene(scene);
-        editClientStage.show();
-    }
 
-    protected void closeStage() {
-        if (editClientStage != null) {
-            editClientStage.close();
-            editClientStage = null;
-            client = null;
-            tiedPane = null;
-        }
-    }
 
-    private void initScene() {
+    private void initScene(BorderPane pane, Client client) {
+        GridPane gPane = new GridPane();
+
+        Label idLabel = new Label("Client ID:");
+        Label nameFirstLabel = new Label("First name:");
+        Label nameLastLabel = new Label("Last name:");
+        Label titleLabel = new Label("Title:");
+        Label emailLabel = new Label("Email address:");
+        Label phoneLabel = new Label("Phone #:");
+        Label addressLine1Label = new Label("Address line 1:");
+        Label addressLine2Label = new Label("Address line 2:");
+        Label addressState;
+        Label addressCity;
+        Label addressZipCode;
+        Label orgLabel = new Label("Organization:");
+        Label contactPrimaryLabel = new Label("");
+        Label contactSecondaryLabel = new Label("");
+        Label contactTertiaryLabel = new Label("");
+
+
+
+
         initButtons();
         initTextFields();
         Label t = new Label("Editing client");
         t.setMaxWidth(200);
         t.setAlignment(Pos.CENTER);
         BorderPane.setAlignment(t, Pos.CENTER);
-        editClientPane.setTop(t);
-        editClientPane.setCenter(input);
-        editClientPane.setBottom(buttons);
+        pane.setTop(t);
+        pane.setCenter(input);
+        pane.setBottom(buttons);
     }
 
     private void initButtons() {
@@ -89,14 +101,14 @@ public class ClientEditStage {
         input.setAlignment(Pos.CENTER);
         input.setPrefWidth(200);
 
-        firstName = new TextField(client.getFirstName());
-        lastName = new TextField(client.getLastName());
-        title = new TextField(client.getTitle());
-        organization = new TextField(client.getOrg());
-        emailAddress = new TextField(client.getEmail());
-        phone = new TextField(client.getPhone());
-        physicalAddress = new TextField(client.getAddress());
-        contactPrimary = new TextField();
+        TextField firstName = new TextField(originalClientData.getFirstName());
+        TextField lastName = new TextField(originalClientData.getLastName());
+        TextField title = new TextField(originalClientData.getTitle());
+        TextField organization = new TextField(originalClientData.getOrg());
+        TextField emailAddress = new TextField(originalClientData.getEmail());
+        TextField phone = new TextField(originalClientData.getPhone());
+        TextField physicalAddress = new TextField(originalClientData.getAddress());
+        TextField contactPrimary = new TextField();
 
         firstName.setMaxWidth(input.getPrefWidth());
         lastName.setMaxWidth(input.getPrefWidth());
@@ -111,9 +123,9 @@ public class ClientEditStage {
     }
 
     private void initHandlers() {
-        cancelButton.setOnAction(e -> closeStage());
+        cancelButton.setOnAction(e -> close());
         submitButton.setOnAction(e -> {
-            String clientID = client.getClientID();
+            String clientID = originalClientData.getClientID();
             update(clientID);
             tiedPane.refreshTable();
         });
@@ -122,18 +134,26 @@ public class ClientEditStage {
     private void update(String clientID) {
 
         String[] vals = {
-                client.getFirstName(),
-                client.getLastName(),
-                client.getTitle(),
-                client.getEmail(),
-                client.getPhone(),
-                client.getAddress(),
-                client.getOrg(),
+                originalClientData.getFirstName(),
+                originalClientData.getLastName(),
+                originalClientData.getTitle(),
+                originalClientData.getEmail(),
+                originalClientData.getPhone(),
+                originalClientData.getAddress(),
+                originalClientData.getOrg(),
                 clientID
         };
 
-        DBController.setClientData(vals, clientID);
+//        DBController.setClientData(vals, clientID);
 
+    }
+
+    protected void show() {
+        editClientStage.show();
+    }
+
+    protected void close() {
+        editClientStage.close();
     }
 
 }

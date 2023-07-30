@@ -47,12 +47,6 @@ public class ClientViewPane {
 
     }
 
-    protected void addClient(Client client) {
-        client.setClientID(DBController.getClientID(client.getFirstName(), client.getLastName()));
-        clients.add(client);
-        refreshTable();
-    }
-
     private void setupTable(Pane root) {
         tableView = new TableView<>();
         clients = FXCollections.observableArrayList(DBController.getAllClients());
@@ -117,8 +111,8 @@ public class ClientViewPane {
 
     private void editClient(Client client) {
         ClientEditStage clientEditStage = new ClientEditStage(this, client);
-        clientEditStage.showStage();
-        back.addEventHandler(ActionEvent.ACTION, event -> clientEditStage.closeStage());
+        clientEditStage.show();
+        back.addEventHandler(ActionEvent.ACTION, event -> clientEditStage.close());
     }
 
     protected void refreshTable() {

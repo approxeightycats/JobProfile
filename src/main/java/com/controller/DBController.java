@@ -56,19 +56,6 @@ public class DBController {
         }
     }
 
-    public static void addClientName(Client client) {
-        String sql = "INSERT INTO CLIENTS (FIRST_NAME, LAST_NAME) VALUES (?, ?)";
-        try (Connection conn = connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, client.getFirstName());
-            ps.setString(2, client.getLastName());
-            ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     public static void addClient(Client client) {
         String sql = "INSERT INTO CLIENTS (" +
                 "FIRST_NAME, LAST_NAME, TITLE, EMAIL, PHONE, ADDRESS, ORGANIZATION) " +
@@ -242,28 +229,26 @@ public class DBController {
         return jobs;
     }
 
-    public static Equipment getEquipment(String serial) {
-        Equipment e = new Equipment();
-        String sql = "SELECT * FROM EQUIPMENT WHERE SERIAL = (?)";
-
-        try (Connection conn = connect();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, serial);
-            ResultSet rs = ps.executeQuery();
-            e.setItem(rs.getString("ITEM"));
-            e.setDepartment(rs.getString("DEPARTMENT"));
-            e.setReplacementCost(rs.getInt("REPLACEMENT_COST"));
-            e.setDateOfService(rs.getString("DATE_OF_SERVICE"));
-            e.setSerial(rs.getString("SERIAL"));
-            e.setStatus(rs.getString("STATUS"));
-            e.setRentalCost(rs.getInt("RENTAL_RATE"));
-        }
-        catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-        return e;
-    }
+//    public static Equipment getEquipment(String serial) {
+//        Equipment e = new Equipment();
+//        String sql = "SELECT * FROM EQUIPMENT WHERE SERIAL = (?)";
+//        try (Connection conn = connect();
+//             PreparedStatement ps = conn.prepareStatement(sql)) {
+//            ps.setString(1, serial);
+//            ResultSet rs = ps.executeQuery();
+//            e.setItem(rs.getString("ITEM"));
+//            e.setDepartment(rs.getString("DEPARTMENT"));
+//            e.setReplacementCost(rs.getInt("REPLACEMENT_COST"));
+//            e.setDateOfService(rs.getString("DATE_OF_SERVICE"));
+//            e.setSerial(rs.getString("SERIAL"));
+//            e.setStatus(rs.getString("STATUS"));
+//            e.setRentalCost(rs.getInt("RENTAL_RATE"));
+//        }
+//        catch (SQLException ex) {
+//            System.out.println(ex.getMessage());
+//        }
+//        return e;
+//    }
 
     public static ArrayList<Equipment> getAllEquipment() {
         ArrayList<Equipment> equipment = new ArrayList<>();
@@ -342,31 +327,71 @@ public class DBController {
         }
     }
 
-    public static void setClientData(String[] vals, String id) {
-        String sql = "UPDATE CLIENTS SET " +
-                "FIRST_NAME = (?), " +
-                "LAST_NAME = (?), " +
-                "TITLE = (?), " +
-                "EMAIL = (?), " +
-                "PHONE = (?), " +
-                "ADDRESS = (?), " +
-                "ORGANIZATION = (?) " +
-                "WHERE CLIENT_ID = (?)";
+    private static void clientEditThing(String cid, String val, String sql) {
         try (Connection conn = connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, vals[0]);
-            ps.setString(2, vals[1]);
-            ps.setString(3, vals[2]);
-            ps.setString(4, vals[3]);
-            ps.setString(5, vals[4]);
-            ps.setString(6, vals[5]);
-            ps.setString(7, vals[6]);
-            ps.setString(8, id);
+            ps.setString(1, val);
+            ps.setString(2, cid);
             ps.executeUpdate();
         }
         catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public static void editClientId(String cid, String val) {
+        String sql = "UPDATE CLIENTS SET CLIENT_ID = (?) WHERE CLIENT_ID = (?)";
+        clientEditThing(cid, val, sql);
+    }
+
+    public static void editClientNameFirst(String cid, String val) {
+        String sql = "UPDATE CLIENTS SET FIRST_NAME = (?) WHERE CLIENT_ID = (?)";
+        clientEditThing(cid, val, sql);
+    }
+
+    public static void editClientNameLast(String cid, String val) {
+        String sql = "UPDATE CLIENTS SET LAST_NAME = (?) WHERE CLIENT_ID = (?)";
+        clientEditThing(cid, val, sql);
+    }
+
+    public static void editClientTitle(String cid, String val) {
+        String sql = "UPDATE CLIENTS SET TITLE = (?) WHERE CLIENT_ID = (?)";
+        clientEditThing(cid, val, sql);
+    }
+
+    public static void editClientEmail(String cid, String val) {
+        String sql = "UPDATE CLIENTS SET EMAIL = (?) WHERE CLIENT_ID = (?)";
+        clientEditThing(cid, val, sql);
+    }
+
+    public static void editClientPhone(String cid, String val) {
+        String sql = "UPDATE CLIENTS SET PHONE = (?) WHERE CLIENT_ID = (?)";
+        clientEditThing(cid, val, sql);
+    }
+
+    public static void editClientContactPrimary(String cid, String val) {
+        String sql = "UPDATE CLIENTS SET CONTACT_0 = (?) WHERE CLIENT_ID = (?)";
+        clientEditThing(cid, val, sql);
+    }
+
+    public static void editClientContactSecondary(String cid, String val) {
+        String sql = "UPDATE CLIENTS SET CONTACT_1 = (?) WHERE CLIENT_ID = (?)";
+        clientEditThing(cid, val, sql);
+    }
+
+    public static void editClientContactTertiary(String cid, String val) {
+        String sql = "UPDATE CLIENTS SET CONTACT_2 = (?) WHERE CLIENT_ID = (?)";
+        clientEditThing(cid, val, sql);
+    }
+
+    public static void editClientAddress(String cid, String val) {
+        String sql = "UPDATE CLIENTS SET ADDRESS = (?) WHERE CLIENT_ID = (?)";
+        clientEditThing(cid, val, sql);
+    }
+
+    public static void editClientOrganization(String cid, String val) {
+        String sql = "UPDATE CLIENTS SET ORGANIZATION = (?) WHERE CLIENT_ID = (?)";
+        clientEditThing(cid, val, sql);
     }
 
     public void editJobStatus(int jobID, String status) {
