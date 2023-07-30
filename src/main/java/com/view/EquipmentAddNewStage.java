@@ -23,6 +23,7 @@ public class EquipmentAddNewStage {
     private ArrayList<TextField> inputText;
     private DatePicker dosPicker;
     private ComboBox<String> statusBox;
+    private ComboBox<String> departmentBox;
     private Button cancel;
     private Button add;
 
@@ -45,39 +46,44 @@ public class EquipmentAddNewStage {
     private void setupTextInput(BorderPane bp) {
         GridPane stuff = new GridPane();
 
-        Label nameLabel = new Label("Name:");
-        Label categoryLabel = new Label("Category:");
+        Label nameLabel = new Label("Item:");
+        Label departmentLabel = new Label("Department:");
         Label serialLabel = new Label("Serial #:");
         Label dos = new Label("Date of service:");
         Label statusLabel = new Label("Status:");
         Label replacementPriceLabel = new Label("Replacement cost ($):");
         Label rentalPriceLabel = new Label("Rental rate:");
 
-        TextField nameField = new TextField();
-        TextField categoryField = new TextField();
+        TextField itemField = new TextField();
         TextField serialField = new TextField();
         dosPicker = new DatePicker();
         TextField replacementPriceField = new TextField();
         TextField rentalPriceField = new TextField();
 
-        ObservableList<String> boxOptions = FXCollections.observableArrayList(
-                "In service", "Broken");
+        ObservableList<String> departmentBoxOptions = FXCollections.observableArrayList(
+                "Camera & Support", "Grip", "Lighting", "Post-production",
+                "Art", "Still photography", "Audio", "Other"
+        );
+        ObservableList<String> statusBoxOptions = FXCollections.observableArrayList(
+                "In service", "Damaged/Out for repair", "Out of service");
 
-        statusBox = new ComboBox<>(boxOptions);
+        departmentBox = new ComboBox<>(departmentBoxOptions);
+        departmentBox.getSelectionModel().selectFirst();
+        statusBox = new ComboBox<>(statusBoxOptions);
         statusBox.getSelectionModel().selectFirst();
 
         inputText = new ArrayList<>(Arrays.asList(
-                nameField, categoryField, serialField,
+                itemField, serialField,
                 replacementPriceField, rentalPriceField));
 
         cancel = new Button("Cancel");
         add = new Button("Add");
 
         stuff.addColumn(0,
-                nameLabel, categoryLabel, serialLabel, dos,
+                nameLabel, departmentLabel, serialLabel, dos,
                 statusLabel, replacementPriceLabel, rentalPriceLabel);
         stuff.addColumn(1,
-                nameField, categoryField, serialField, dosPicker,
+                itemField, departmentBox, serialField, dosPicker,
                 statusBox, replacementPriceField, rentalPriceField);
         stuff.addRow(7,
                 cancel, add);
@@ -100,16 +106,16 @@ public class EquipmentAddNewStage {
 
     private void addEquipment() {
         String eName = inputText.get(0).getText();
-        String category = inputText.get(1).getText();
-        String serial = inputText.get(2).getText();
+        String department = departmentBox.getValue();
+        String serial = inputText.get(1).getText();
         String dos = dosPicker.getValue().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
         String status = statusBox.getValue();
-        String replacementPrice = inputText.get(3).getText();
-        String rentalPrice = inputText.get(4).getText();
+        String replacementPrice = inputText.get(2).getText();
+        String rentalPrice = inputText.get(3).getText();
 
         Equipment toAdd = new Equipment();
         toAdd.setItem(eName);
-        toAdd.setDepartment(category);
+        toAdd.setDepartment(department);
         toAdd.setSerial(serial);
         toAdd.setDateOfService(dos);
         toAdd.setStatus(status);

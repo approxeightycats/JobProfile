@@ -135,11 +135,11 @@ public class DBController {
         }
     }
 
-    public static void editEquipmentReplacementCost(String value, String serial) {
+    public static void editEquipmentReplacementCost(Integer value, String serial) {
         String sql = "UPDATE EQUIPMENT SET REPLACEMENT_COST = (?) WHERE SERIAL = (?)";
         try (Connection conn = connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, value);
+            ps.setInt(1, value);
             ps.setString(2, serial);
             ps.executeUpdate();
         }
@@ -173,11 +173,11 @@ public class DBController {
         }
     }
 
-    public static void editEquipmentRentalRate(String value, String serial) {
+    public static void editEquipmentRentalRate(Integer value, String serial) {
         String sql = "UPDATE EQUIPMENT SET RENTAL_RATE = (?) WHERE SERIAL = (?)";
         try (Connection conn = connect();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, value);
+            ps.setInt(1, value);
             ps.setString(2, serial);
             ps.executeUpdate();
         }
@@ -240,6 +240,29 @@ public class DBController {
             System.out.println(e.getMessage());
         }
         return jobs;
+    }
+
+    public static Equipment getEquipment(String serial) {
+        Equipment e = new Equipment();
+        String sql = "SELECT * FROM EQUIPMENT WHERE SERIAL = (?)";
+
+        try (Connection conn = connect();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, serial);
+            ResultSet rs = ps.executeQuery();
+            e.setItem(rs.getString("ITEM"));
+            e.setDepartment(rs.getString("DEPARTMENT"));
+            e.setReplacementCost(rs.getInt("REPLACEMENT_COST"));
+            e.setDateOfService(rs.getString("DATE_OF_SERVICE"));
+            e.setSerial(rs.getString("SERIAL"));
+            e.setStatus(rs.getString("STATUS"));
+            e.setRentalCost(rs.getInt("RENTAL_RATE"));
+        }
+        catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        return e;
     }
 
     public static ArrayList<Equipment> getAllEquipment() {

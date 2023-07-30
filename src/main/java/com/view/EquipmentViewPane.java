@@ -47,6 +47,22 @@ public class EquipmentViewPane {
         viewEquipmentPane.setBottom(buttons);
     }
 
+    private static TableCell<Equipment, Integer> call(TableColumn<Equipment, Integer> c) {
+        return new TableCell<>() {
+            @Override
+            protected void updateItem(Integer val, boolean empty) {
+                super.updateItem(val, empty);
+                if (val == null || empty) {
+                    setText(null);
+                } else {
+                    int left = val / 100;
+                    String right = String.format("%02d", val % 100);
+                    setText("$" + left + "." + right);
+                }
+            }
+        };
+    }
+
     private void deleteEquipment(Equipment equipment) {
         String toDelete = equipment.getSerial();
         DBController.removeEquipment(toDelete);
@@ -65,10 +81,12 @@ public class EquipmentViewPane {
         equipmentCategoryCol.setCellValueFactory(f -> f.getValue().departmentProperty());
         TableColumn<Equipment, String> equipmentDOSCol = new TableColumn<>("Date of service");
         equipmentDOSCol.setCellValueFactory(f -> f.getValue().dateOfServiceProperty());
-        TableColumn<Equipment, String> equipmentPriceCol = new TableColumn<>("Replacement cost");
-        equipmentPriceCol.setCellValueFactory(new PropertyValueFactory<>("replacementCost"));
-        TableColumn<Equipment, String> equipmentRateCol = new TableColumn<>("Rental rate");
-        equipmentRateCol.setCellValueFactory(new PropertyValueFactory<>("rentalCost"));
+        TableColumn<Equipment, Integer> equipmentPriceCol = new TableColumn<>("Replacement cost");
+        equipmentPriceCol.setCellValueFactory(f -> f.getValue().replacementCostProperty().asObject());
+        equipmentPriceCol.setCellFactory(EquipmentViewPane::call);
+        TableColumn<Equipment, Integer> equipmentRateCol = new TableColumn<>("Rental rate");
+        equipmentRateCol.setCellValueFactory(f -> f.getValue().rentalCostProperty().asObject());
+        equipmentRateCol.setCellFactory(EquipmentViewPane::call);
         TableColumn<Equipment, String> equipmentStatusCol = new TableColumn<>("Status");
         equipmentStatusCol.setCellValueFactory(f -> f.getValue().statusProperty());
         TableColumn<Equipment, String> equipmentSerialCol = new TableColumn<>("Serial #");

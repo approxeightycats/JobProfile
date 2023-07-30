@@ -22,6 +22,7 @@ public class EquipmentEditStage {
 
     private DatePicker dosPicker;
     private ComboBox<String> statusBox;
+    private ComboBox<String> departmentBox;
     private ArrayList<TextField> inputText;
     private Button cancel;
     private Button confirm;
@@ -55,15 +56,14 @@ public class EquipmentEditStage {
     private void setupTextInput(BorderPane bp, Equipment equipment) {
         GridPane stuff = new GridPane();
 
-        Label nameLabel = new Label("Name:");
-        Label categoryLabel = new Label("Category:");
+        Label itemLabel = new Label("Item:");
+        Label departmentLabel = new Label("Department:");
         Label dos = new Label("Date of service:");
         Label statusLabel = new Label("Status:");
         Label replacementPriceLabel = new Label("Replacement cost:");
         Label rentalPriceLabel = new Label("Rental rate:");
 
-        TextField nameField = new TextField(equipment.getItem());
-        TextField categoryField = new TextField(equipment.getDepartment());
+        TextField itemField = new TextField(equipment.getItem());
         dosPicker = new DatePicker();
         dosPicker.setValue(LocalDate.parse(equipment.getDateOfService(),
                 DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
@@ -72,24 +72,29 @@ public class EquipmentEditStage {
         TextField rentalPriceField =
                 new TextField(parseInteger(equipment.getRentalCost()));
 
-        ObservableList<String> boxOptions = FXCollections.observableArrayList(
-                "In service", "Broken");
+        ObservableList<String> departmentBoxOptions = FXCollections.observableArrayList(
+                "Camera & Support", "Grip", "Lighting", "Post-production",
+                "Art", "Still photography", "Audio", "Other"
+        );
+        ObservableList<String> statusBoxOptions = FXCollections.observableArrayList(
+                "In service", "Damaged/Out for repair", "Out of service");
 
-        statusBox = new ComboBox<>(boxOptions);
+        departmentBox = new ComboBox<>(departmentBoxOptions);
+        departmentBox.getSelectionModel().select(equipment.getDepartment());
+        statusBox = new ComboBox<>(statusBoxOptions);
         statusBox.getSelectionModel().select(equipment.getStatus());
 
         inputText = new ArrayList<>(Arrays.asList(
-                nameField, categoryField,
-                replacementPriceField, rentalPriceField));
+                itemField, replacementPriceField, rentalPriceField));
 
         cancel = new Button("Cancel");
         confirm = new Button("Confirm");
 
         stuff.addColumn(0,
-                nameLabel, categoryLabel, dos,
+                itemLabel, departmentLabel, dos,
                 statusLabel, replacementPriceLabel, rentalPriceLabel);
         stuff.addColumn(1,
-                nameField, categoryField, dosPicker,
+                itemField, departmentBox, dosPicker,
                 statusBox, replacementPriceField, rentalPriceField);
         stuff.addRow(6,
                 cancel, confirm);
@@ -102,7 +107,7 @@ public class EquipmentEditStage {
 
     private void updateEquipment(Equipment oldValues, Equipment newValues) {
         String serial = oldValues.getSerial();
-
+        //todo fix this stuff isnt updating right
         if (!oldValues.getItem().equals(newValues.getItem())) {
             DBController.editEquipmentItem(newValues.getItem(), serial);
         }
@@ -116,10 +121,10 @@ public class EquipmentEditStage {
             DBController.editEquipmentStatus(newValues.getStatus(), serial);
         }
         if (!oldValues.getReplacementCost().equals(newValues.getReplacementCost())) {
-            DBController.editEquipmentReplacementCost(parseInteger(newValues.getReplacementCost()), serial);
+            DBController.editEquipmentReplacementCost(newValues.getReplacementCost(), serial);
         }
         if (!oldValues.getRentalCost().equals(newValues.getRentalCost())) {
-            DBController.editEquipmentRentalRate(parseInteger(newValues.getRentalCost()), serial);
+            DBController.editEquipmentRentalRate(newValues.getRentalCost(), serial);
         }
 
     }
@@ -128,12 +133,12 @@ public class EquipmentEditStage {
         Equipment newEquipment = new Equipment();
 
         newEquipment.setItem(inputText.get(0).getText());
-        newEquipment.setDepartment(inputText.get(1).getText());
+        newEquipment.setDepartment(departmentBox.getValue());
         newEquipment.setDateOfService(
                 dosPicker.getValue().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
         newEquipment.setStatus(statusBox.getValue());
-        newEquipment.setReplacementCost(parseString(inputText.get(2).getText()));
-        newEquipment.setRentalCost(parseString(inputText.get(3).getText()));
+        newEquipment.setReplacementCost(parseString(inputText.get(1).getText()));
+        newEquipment.setRentalCost(parseString(inputText.get(2).getText()));
 
         return newEquipment;
     }
