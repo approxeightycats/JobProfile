@@ -107,7 +107,6 @@ public class EquipmentEditStage {
 
     private void updateEquipment(Equipment oldValues, Equipment newValues) {
         String serial = oldValues.getSerial();
-        //todo fix this stuff isnt updating right
         if (!oldValues.getItem().equals(newValues.getItem())) {
             DBController.editEquipmentItem(newValues.getItem(), serial);
         }
@@ -126,7 +125,6 @@ public class EquipmentEditStage {
         if (!oldValues.getRentalCost().equals(newValues.getRentalCost())) {
             DBController.editEquipmentRentalRate(newValues.getRentalCost(), serial);
         }
-
     }
 
     private Equipment getNewEquipmentData() {

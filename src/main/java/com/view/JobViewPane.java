@@ -13,6 +13,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
+import java.util.Optional;
+
 public class JobViewPane {
 
     private final BorderPane viewJobsPane;
@@ -27,13 +29,8 @@ public class JobViewPane {
         setupTable(root);
         back = new Button("Back");
 
-        Button newJob = new Button("Add new job");
-        newJob.setOnAction(e -> {
-
-        });
-
         HBox buttons = new HBox(10);
-        buttons.getChildren().addAll(back, newJob);
+        buttons.getChildren().add(back);
         buttons.setPadding(new Insets(25, 25, 25, 25));
         buttons.setAlignment(Pos.CENTER);
 
@@ -47,14 +44,6 @@ public class JobViewPane {
         jobs = FXCollections.observableArrayList(DBController.getAllJobs());
         tableView.setItems(jobs);
         tableView.refresh();
-    }
-
-    protected void addJob() {
-
-    }
-
-    private void editJob() {
-
     }
 
     private void deleteJob(Job job) {
@@ -101,12 +90,18 @@ public class JobViewPane {
                         System.out.println("opening");
 //                            editJob(tableView.getSelectionModel().getSelectedItem());
                     });
+                    MenuItem archiveItem = new MenuItem("Archive selected");
+                    archiveItem.setOnAction(e -> {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setContentText("putting this here so i dont forget it later");
+                        alert.showAndWait();
+                    });
                     MenuItem removeItem = new MenuItem("Delete");
                     removeItem.setOnAction(e -> {
                         System.out.println("delete selected");
                         deleteJob(tableView.getSelectionModel().getSelectedItem());
                     });
-                    rowMenu.getItems().addAll(openItem, removeItem);
+                    rowMenu.getItems().addAll(openItem, archiveItem, removeItem);
 
                     // only display context menu for non-empty rows:
                     row.contextMenuProperty().bind(

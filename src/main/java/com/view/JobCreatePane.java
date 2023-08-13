@@ -1,5 +1,6 @@
 package com.view;
 
+import com.controller.DBController;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,18 +13,22 @@ import java.util.Arrays;
 
 public class JobCreatePane {
 
-    private final BorderPane createJobPane;
+    private BorderPane createJobPane;
     protected Button back;
+    private final String name;
 
     protected JobCreatePane(Pane root) {
         createJobPane = new BorderPane();
-        initOptions(createJobPane);
+        back = new Button("Back to main");
+        this.name = "Untitled";
+        createJobPane.setCenter(createMainVBox());
+        BorderPane.setAlignment(createJobPane, Pos.CENTER);
     }
 
-    private void initOptions(BorderPane bp) {
+    protected VBox createMainVBox() {
         VBox jobInfoBoxes = new VBox(10);
-        Label jobNumberLabel = new Label("Job #: ");
-        Label jobNameLabel = new Label("Job name:");
+        Label jobNumberLabel = new Label("Job #: " + (DBController.getLatestJobId()));
+        Label jobNameLabel = new Label("Job name: " + name);
         Label jobStatusLabel = new Label("Job status:");
         Button cInfoLink = new Button("Client info");
         Button productionLink = new Button("Production");
@@ -31,7 +36,6 @@ public class JobCreatePane {
         Button equipmentLink = new Button("Equipment");
         Button summaryLink = new Button("Summary");
         Button invoiceLink = new Button("Invoice");
-        back = new Button("Back to main");
         ArrayList<Button> jobCreatePaneButtons = new ArrayList<>(Arrays.asList(
                 cInfoLink, productionLink, techInfoLink, equipmentLink, summaryLink, invoiceLink, back
         ));
@@ -43,12 +47,11 @@ public class JobCreatePane {
                 jobNumberLabel, jobNameLabel, jobStatusLabel, cInfoLink, productionLink,
                 techInfoLink, equipmentLink, summaryLink, invoiceLink, back
         ));
-        bp.setCenter(jobInfoBoxes);
         jobInfoBoxes.setAlignment(Pos.CENTER_LEFT);
-        BorderPane.setAlignment(bp, Pos.CENTER);
+        return jobInfoBoxes;
     }
 
-    private void initHandlers() {
+    private void initHandlers(Pane root) {
 
     }
 

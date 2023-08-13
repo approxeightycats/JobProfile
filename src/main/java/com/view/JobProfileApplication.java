@@ -1,13 +1,13 @@
 package com.view;
 
+import com.controller.DBController;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -15,6 +15,7 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 
 public class JobProfileApplication extends Application {
 
@@ -24,7 +25,6 @@ public class JobProfileApplication extends Application {
     private ArrayList<Button> menuButtons;
     private Boolean menuToggle;
     private BorderPane activePane;
-
     private ObservableList<String> currentJobEquipment;
     private ClientViewPane clientViewPane;
     private JobViewPane jobViewPane;
@@ -115,10 +115,6 @@ public class JobProfileApplication extends Application {
         initMainBorderPane(mainBorderPane);
     }
 
-    private void initPopupWindows() {
-
-    }
-
     private void initMainBorderPane(BorderPane bp) {
         Label title = new Label("Welcome to ShowGo!");
         Label desc = new Label("I want to:");
@@ -129,7 +125,7 @@ public class JobProfileApplication extends Application {
         Button open = new Button("Open an existing job.");
         create.setMinWidth(250);
         open.setMinWidth(250);
-        create.setOnAction(e -> swapActiveBorderPane("jobCreatePage"));
+        create.setOnAction(e -> createJob());
         open.setOnAction(e -> swapActiveBorderPane("jobListPage"));
 
         actions.getChildren().addAll(desc, create, open);
@@ -137,14 +133,6 @@ public class JobProfileApplication extends Application {
         bp.setTop(title);
         bp.setCenter(actions);
         BorderPane.setAlignment(bp, Pos.CENTER);
-    }
-
-    private void initJobSummaryBorderPane(BorderPane bp) {
-
-    }
-
-    private void initInvoiceBorderPane(BorderPane bp) {
-
     }
 
     private void initMenu() {
@@ -220,7 +208,30 @@ public class JobProfileApplication extends Application {
 
     private void initButtonHandlers() {
         for (Button b : menuButtons) {
-            b.setOnAction(e -> swapActiveBorderPane(b.getId().substring(0, b.getId().length() - 3)));
+            String sub = b.getId().substring(0, b.getId().length() - 3);
+            if (sub.equals("jobCreatePage")) {
+                b.setOnAction(e -> createJob());
+            }
+            else
+            {
+                b.setOnAction(e -> swapActiveBorderPane(sub));
+            }
+
+        }
+
+    }
+
+    private void createJob() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Create new job.");
+        alert.setHeaderText("Creating a new job.");
+        alert.setContentText("Create a new job?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            DBController.addBlankJob();
+            jobViewPane.refreshTable();
+            jobCreatePane.getCreateJobPane().setCenter(jobCreatePane.createMainVBox());
+            swapActiveBorderPane("jobCreatePage");
         }
     }
 
@@ -236,7 +247,4 @@ public class JobProfileApplication extends Application {
         activePane = newActivePane;
     }
 
-    private void initInvoiceScene() {
-
-    }
 }

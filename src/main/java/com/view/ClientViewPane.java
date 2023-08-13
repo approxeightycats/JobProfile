@@ -80,7 +80,16 @@ public class ClientViewPane {
         TableColumn<Client, String> phoneCol = new TableColumn<>("Primary phone");
         phoneCol.setCellValueFactory(f -> f.getValue().phoneProperty());
         TableColumn<Client, String> addressCol = new TableColumn<>("Address");
-        addressCol.setCellValueFactory(f -> f.getValue().addressProperty());
+        addressCol.setCellValueFactory(cellData -> Bindings.createStringBinding(
+                () -> cellData.getValue().getAddressLine1() + ", " +
+                        cellData.getValue().getAddressCity() + ", " +
+                        cellData.getValue().getAddressState() + ", " +
+                        cellData.getValue().getAddressZip(),
+                cellData.getValue().addressLine1Property(),
+                cellData.getValue().addressCityProperty(),
+                cellData.getValue().addressStateProperty(),
+                cellData.getValue().addressZipProperty()
+        ));
 
         tableView.getColumns().setAll(clientIDCol, lastNameCol, firstNameCol, orgNameCol, titleCol, emailCol, phoneCol, addressCol);
 

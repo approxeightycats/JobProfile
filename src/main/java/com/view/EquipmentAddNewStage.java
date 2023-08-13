@@ -46,7 +46,7 @@ public class EquipmentAddNewStage {
     private void setupTextInput(BorderPane bp) {
         GridPane stuff = new GridPane();
 
-        Label nameLabel = new Label("Item:");
+        Label itemLabel = new Label("Item:");
         Label departmentLabel = new Label("Department:");
         Label serialLabel = new Label("Serial #:");
         Label dos = new Label("Date of service:");
@@ -80,7 +80,7 @@ public class EquipmentAddNewStage {
         add = new Button("Add");
 
         stuff.addColumn(0,
-                nameLabel, departmentLabel, serialLabel, dos,
+                itemLabel, departmentLabel, serialLabel, dos,
                 statusLabel, replacementPriceLabel, rentalPriceLabel);
         stuff.addColumn(1,
                 itemField, departmentBox, serialField, dosPicker,
@@ -128,7 +128,7 @@ public class EquipmentAddNewStage {
     private int parseString(String val) {
         String[] split = val.split("\\.");
 
-        // splits a $x.xx into $x and xx, converts to pennies
+        // splits $x.xx into $x and xx, converts to pennies
         int leftInt = Integer.parseInt(split[0]) * 100;
         int rightInt = 0;
         if (split.length > 1) {
